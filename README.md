@@ -1,61 +1,41 @@
-# 🚀 Getting started with Strapi
+# Personal Creative Portfolio
 
-Strapi comes with a full featured [Command Line Interface](https://docs.strapi.io/dev-docs/cli) (CLI) which lets you scaffold and manage your project in seconds.
+Monorepo del assessment front-end: un portafolio personal compuesto por un backend headless (Strapi) y una SPA (React) que lo consume.
 
-### `develop`
-
-Start your Strapi application with autoReload enabled. [Learn more](https://docs.strapi.io/dev-docs/cli#strapi-develop)
+## Estructura
 
 ```
-npm run develop
-# or
-yarn develop
+.
+├── backend/    # API headless con Strapi 5 (TypeScript, SQLite) — solo lectura pública
+└── frontend/   # SPA con React 18 + Vite que consume la API (en construcción)
 ```
 
-### `start`
+Cada carpeta es una app independiente con su propio `package.json`, se instala y se ejecuta por separado.
 
-Start your Strapi application with autoReload disabled. [Learn more](https://docs.strapi.io/dev-docs/cli#strapi-start)
+## Puesta en marcha
 
-```
-npm run start
-# or
-yarn start
-```
+### Backend
 
-### `build`
-
-Build your admin panel. [Learn more](https://docs.strapi.io/dev-docs/cli#strapi-build)
-
-```
-npm run build
-# or
-yarn build
+```bash
+cd backend
+cp .env.example .env   # luego generar valores: openssl rand -base64 16
+npm install
+npm run develop        # http://localhost:1337  (admin en /admin, API en /api/portfolio)
 ```
 
-## ⚙️ Deployment
+Ver [backend/README.md](backend/README.md) para detalles, el modelo de contenido y la superficie de la API.
 
-Strapi gives you many possible deployment options for your project including [Strapi Cloud](https://cloud.strapi.io). Browse the [deployment section of the documentation](https://docs.strapi.io/dev-docs/deployment) to find the best solution for your use case.
+### Frontend
 
+```bash
+cd frontend
+npm install
+npm run dev            # http://localhost:5173
 ```
-yarn strapi deploy
-```
 
-## 📚 Learn more
+> Pendiente de scaffolding.
 
-- [Resource center](https://strapi.io/resource-center) - Strapi resource center.
-- [Strapi documentation](https://docs.strapi.io) - Official Strapi documentation.
-- [Strapi tutorials](https://strapi.io/tutorials) - List of tutorials made by the core team and the community.
-- [Strapi blog](https://strapi.io/blog) - Official Strapi blog containing articles made by the Strapi team and the community.
-- [Changelog](https://strapi.io/changelog) - Find out about the Strapi product updates, new features and general improvements.
+## Documentación
 
-Feel free to check out the [Strapi GitHub repository](https://github.com/strapi/strapi). Your feedback and contributions are welcome!
-
-## ✨ Community
-
-- [Discord](https://discord.strapi.io) - Come chat with the Strapi community including the core team.
-- [Forum](https://forum.strapi.io/) - Place to discuss, ask questions and find answers, show your Strapi project and get feedback or just talk with other Community members.
-- [Awesome Strapi](https://github.com/strapi/awesome-strapi) - A curated list of awesome things related to Strapi.
-
----
-
-<sub>🤫 Psst! [Strapi is hiring](https://strapi.io/careers).</sub>
+- Guardrails y convenciones del backend: [CLAUDE.md](CLAUDE.md)
+- Roadmap del backend: [ROADMAP.md](ROADMAP.md)
