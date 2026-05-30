@@ -102,9 +102,9 @@ frontend/
 
 ## 3. Feature `portfolio` — capa `core` (dominio)
 
-- [ ] 3.1 `entities/`: tipos de dominio (Portfolio, Project, Skill, Experience, Contact, Seo) — independientes de la forma de Strapi
-- [ ] 3.2 `repositories/PortfolioRepository.ts`: interfaz (puerto) `getPortfolio(): Promise<Portfolio>`
-- [ ] 3.3 `usecases/GetPortfolioUseCase.ts`: interactor con `execute(): Promise<Portfolio>`, depende del puerto (no de la implementación)
+- [x] 3.1 `entities/`: tipos de dominio (Portfolio, Project, Skill, Experience, Contact, Seo) — independientes de la forma de Strapi
+- [x] 3.2 `repositories/PortfolioRepository.ts`: interfaz (puerto) `getPortfolio(): Promise<Portfolio>`
+- [x] 3.3 `usecases/GetPortfolioUseCase.ts`: interactor con `execute(): Promise<Portfolio>`, depende del puerto (no de la implementación)
 
 ## 4. Feature `portfolio` — capa `data`
 
