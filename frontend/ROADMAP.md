@@ -94,11 +94,11 @@ frontend/
 
 ## 2. Shared kernel
 
-- [ ] 2.1 `shared/ui/theme`: tokens (colores, espaciado, tipografía), `breakpoints` (mobile-first), `GlobalStyle`, `ThemeProvider`
-- [ ] 2.2 `shared/lib/config`: leer `VITE_API_URL`
-- [ ] 2.3 `shared/lib/http`: `httpClient` (wrapper de `fetch`) con manejo de errores tipado (reutilizable por Ej. 2)
-- [ ] 2.4 `shared/ui/atoms`: empezar los átomos base (Text, Button, Tag, Spinner)
-- [ ] 2.5 `shared/ui/molecules`: Card, SectionTitle
+- [x] 2.1 `shared/ui/theme`: tokens (colores, espaciado, tipografía), `breakpoints` (mobile-first), `GlobalStyle`, `ThemeProvider`
+- [x] 2.2 `shared/lib/config`: leer `VITE_API_URL`
+- [x] 2.3 `shared/lib/http`: `httpClient` (wrapper de `fetch`) con manejo de errores tipado (reutilizable por Ej. 2)
+- [x] 2.4 `shared/ui/atoms`: empezar los átomos base (Text, Button, Tag, Spinner)
+- [x] 2.5 `shared/ui/molecules`: Card, SectionTitle
 
 ## 3. Feature `portfolio` — capa `core` (dominio)
 

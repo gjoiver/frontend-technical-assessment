@@ -106,6 +106,10 @@ The SPA lives in `frontend/` (its own `package.json`). Run frontend commands fro
 - **Repository + Interactor** consumption chain: `Page → hook → ‹Action›UseCase (interactor) → Repository (port) → RepositoryImpl → DataSource → httpClient`.
 - **Feature-based** under `src/features/` (`portfolio`, later `products`); a root **`src/shared/`** kernel holds cross-cutting deps (design system, http client, config, theme, common types).
 - **Atomic Design** for UI: atoms → molecules → organisms → templates → pages (shared generic ones in `shared/ui`, feature-specific organisms in the feature's `presentation/components`).
+- **Component layout:** every UI component is a **folder** with an `index.ts` barrel. Two shapes:
+  - **Pure styled** (e.g. `Button`, `Card`): just `Component.tsx` (the `styled.*`) + `index.ts`.
+  - **Composed** (JSX + atoms + internal styled, e.g. `SectionTitle`): `Component.tsx` (composition/logic only) + `Component.styles.ts` (private internal styled pieces) + `Component.types.ts` (props) + `index.ts`.
+  Prop-less components skip `.types.ts`. Re-export types with `export type *`. Barrel each level (`atoms/index.ts`, …).
 - **Dependency inversion (SOLID-D):** wire concrete deps at the composition root (`src/app/`); presentation receives the interactor already built, never instantiates `data`.
 - **Naming:** use cases are `‹Action›‹Entity›UseCase` (e.g. `GetPortfolioUseCase`), exposing `execute()`.
 - **Path aliases:** `@/` → `src`, `@shared` → `src/shared`, `@features` → `src/features` (configured in `vite.config.ts` + `tsconfig.app.json`).
@@ -115,6 +119,8 @@ The SPA lives in `frontend/` (its own `package.json`). Run frontend commands fro
 - **`erasableSyntaxOnly` is on** (Vite template). Therefore **no parameter properties, no `enum`, no `namespace`** — none are erasable. Use union types and `const` objects instead of enums.
 - **Classes:** declare fields explicitly and assign in the constructor body (not via constructor-parameter shorthand). Add **explicit access modifiers** on every member: `public` for what's used outside (e.g. `error.kind`, `useCase.execute()`), `private` for injected internal deps.
 - **Env:** only `VITE_`-prefixed vars reach the client; read via `import.meta.env`, centralized in `shared/lib/config` (never `process.env`). Type them by augmenting `ImportMetaEnv` in `src/vite-env.d.ts` (which must stay inside `src/` to be included, and must keep its `/// <reference types="vite/client" />`), so `import.meta.env.VITE_*` is `string` instead of `any`.
+- **styled-components theme:** type it by augmenting `DefaultTheme` (`declare module 'styled-components'`) to extend `AppTheme` (= `typeof tokens`), so `props.theme` is fully typed. The empty `interface … extends` is the documented styled-components pattern; ESLint's `@typescript-eslint/no-empty-object-type` is configured with `allowInterfaces: 'with-single-extends'` to permit it. Tokens are the single source of truth — components read `theme.*`, never hardcoded values. Mobile-first via a `media` helper using `min-width`.
+- **CSS units:** `rem` for typography and spacing (respects the user's font-size setting / accessibility); `px` only for hairline borders (crisp 1–3px lines); breakpoints in `px`.
 
 ### React rules
 
