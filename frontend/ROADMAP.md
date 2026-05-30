@@ -87,9 +87,9 @@ frontend/
 - [x] 1.2 Instalar deps de UI: `styled-components` (+ tipos si aplica)
 - [x] 1.3 Instalar router: `react-router-dom`
 - [x] ~~1.4 Mover deps de `backend/package.json`~~ — **N/A**: las deps react/styled-components del backend son del **admin de Strapi** (las necesita `strapi build`); el frontend tiene su propio `package.json`. No se mueve nada.
-- [ ] 1.5 Configurar **path aliases** (`@/`, `@shared`, `@features`) en `vite.config.ts` + `tsconfig`
+- [x] 1.5 Configurar **path aliases** (`@/`, `@shared`, `@features`) en `vite.config.ts` + `tsconfig`
 - [ ] 1.6 ESLint + Prettier (clean code) — opcional si Vite no los trae ya
-- [ ] 1.7 `.env` del front: `VITE_API_URL=http://localhost:1337` (+ `.env.example`)
+- [x] 1.7 `.env` del front: `VITE_API_URL=http://localhost:1337` (+ `.env.example`)
 - [x] **1.8 Checkpoint:** `npm run dev` levanta en `http://localhost:5173`
 
 ## 2. Shared kernel
