@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-Context and working guardrails for this repository. It's a **monorepo**: the Strapi 5 backend lives in `backend/`, the React SPA will live in `frontend/`. These guardrails cover the **backend**. Keep changes aligned with the conventions below.
+Context and working guardrails for this repository. It's a **monorepo**: the Strapi 5 backend lives in `backend/`, the React SPA lives in `frontend/`. Backend conventions are below; **frontend** conventions are in their own section near the end. Keep changes aligned with the conventions below.
 
 ## Project
 
@@ -28,7 +28,7 @@ backend/            the Strapi app — run all backend commands from here (incl.
       portfolio/experience.json
     index.ts        register/bootstrap (bootstrap grants the Public `find` permission; seed still pending)
   config/
-    middlewares.ts  includes strapi::cors (still default config — no explicit origin yet)
+    middlewares.ts  strapi::cors origin set from CLIENT_URL env
     server.ts admin.ts api.ts database.ts plugins.ts
   .env.example      committed; .env is gitignored
 frontend/           the React SPA (not scaffolded yet)
@@ -64,9 +64,9 @@ A **single `portfolio` single type** (draft & publish ON) holds everything, rath
 
 - ✅ Content model + components scaffolded (single type `portfolio`, incl. `experience`).
 - ✅ Public-role `find` permission — granted in `bootstrap` (idempotent).
-- ⛔ Default populate in the controller — **not done** (still the bare core controller).
-- ⛔ Seed data on bootstrap — **deferred to optional polish** (content is loaded via the admin panel for now; see ROADMAP §10).
-- ⛔ CORS origin — **not set** (only the default `strapi::cors` entry is present).
+- ✅ Default populate in the controller `find` (explicit list: components + `projects` dynamic zone, not `'*'`).
+- ✅ CORS origin set from `CLIENT_URL` env (default `http://localhost:5173`).
+- ⛔ Seed data on bootstrap — **deferred to optional polish** (content is loaded via the admin panel for now; see `backend/ROADMAP.md` §10).
 
 ## Architecture & conventions (targets to uphold)
 
@@ -87,6 +87,46 @@ A **single `portfolio` single type** (draft & publish ON) holds everything, rath
 - `strapi.query(...)` and `strapi.documents(...)` return loosely-typed results; narrow or cast at the call site when you need a specific shape rather than spreading `any` through the code.
 - Prefer `import type { ... }` for type-only imports (e.g. `Core`) so they're erased from the build.
 - Generated types live in `types/generated/` — let Strapi regenerate them; do not edit by hand.
+
+## Frontend (React SPA) — architecture & conventions
+
+The SPA lives in `frontend/` (its own `package.json`). Run frontend commands from `frontend/` (`npm run dev`, `npm run build`, `npm run test`). Detailed plan in `frontend/ROADMAP.md`.
+
+### Stack
+
+- **React 19** · **Vite** · **TypeScript** · **styled-components** (v6) · **react-router-dom** (v6/v7)
+- Tests: **Vitest** + **React Testing Library** (jsdom)
+
+### Architecture (required)
+
+- **Clean Architecture in layers, per feature** — dependencies point inward:
+  - `core` → domain: entities, repository **ports** (interfaces), use cases (**interactors**). No React, no HTTP.
+  - `data` → implements core ports: datasources (HTTP), DTOs + mappers, repository implementations.
+  - `presentation` → React: pages, atomic components, hooks. Depends on `core` (entities/use cases), never on `data` directly.
+- **Repository + Interactor** consumption chain: `Page → hook → ‹Action›UseCase (interactor) → Repository (port) → RepositoryImpl → DataSource → httpClient`.
+- **Feature-based** under `src/features/` (`portfolio`, later `products`); a root **`src/shared/`** kernel holds cross-cutting deps (design system, http client, config, theme, common types).
+- **Atomic Design** for UI: atoms → molecules → organisms → templates → pages (shared generic ones in `shared/ui`, feature-specific organisms in the feature's `presentation/components`).
+- **Dependency inversion (SOLID-D):** wire concrete deps at the composition root (`src/app/`); presentation receives the interactor already built, never instantiates `data`.
+- **Naming:** use cases are `‹Action›‹Entity›UseCase` (e.g. `GetPortfolioUseCase`), exposing `execute()`.
+- **Path aliases:** `@/` → `src`, `@shared` → `src/shared`, `@features` → `src/features` (configured in `vite.config.ts` + `tsconfig.app.json`).
+
+### TypeScript / class style
+
+- **`erasableSyntaxOnly` is on** (Vite template). Therefore **no parameter properties, no `enum`, no `namespace`** — none are erasable. Use union types and `const` objects instead of enums.
+- **Classes:** declare fields explicitly and assign in the constructor body (not via constructor-parameter shorthand). Add **explicit access modifiers** on every member: `public` for what's used outside (e.g. `error.kind`, `useCase.execute()`), `private` for injected internal deps.
+- **Env:** only `VITE_`-prefixed vars reach the client; read via `import.meta.env`, centralized in `shared/lib/config` (never `process.env`). Type them by augmenting `ImportMetaEnv` in `src/vite-env.d.ts` (which must stay inside `src/` to be included, and must keep its `/// <reference types="vite/client" />`), so `import.meta.env.VITE_*` is `string` instead of `any`.
+
+### React rules
+
+- Components and hooks must be **pure and idempotent** — no side effects during render. Treat props/state as **immutable** (never mutate). Side effects (data fetching) go in effects/handlers. Follow the Rules of Hooks. Ref: https://react.dev/reference/rules
+
+### HTTP & errors
+
+- `shared/lib/http` exposes an injected `HttpClient` interface (not raw `fetch` calls scattered around). Errors are a typed `HttpError` with `kind: 'client' | 'server' | 'network' | 'parse'` (+ optional `status`) so the UI can branch on failure type (basis for Exercise 2's 5xx/4xx/network handling).
+
+### Testing
+
+- One unit test minimum (assessment). Use the **AAA** pattern (Arrange / Act / Assert) and **Gherkin**-style descriptions (`describe('Feature: …')` + `it('Scenario: given…, when…, then…')`). Prefer testing pure units (a use case with a mocked repository, or a mapper) to showcase the architecture's testability.
 
 ## Requirements (do not forget)
 
