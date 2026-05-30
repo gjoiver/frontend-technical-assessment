@@ -50,16 +50,16 @@ API headless de solo lectura para el portafolio. Marca cada caja con `[x]`. Las 
 
 ## 8. Reproducibilidad (clon limpio)
 
-- [ ] 8.1 Verificar `.env.example` versionado (APP_KEYS, salts, ENCRYPTION_KEY, JWT_SECRET) + `CLIENT_URL`
-- [ ] 8.2 Nota en README: `cp .env.example .env` + generar valores (`openssl rand -base64 16`)
-- [ ] 8.3 README: documentar cómo poblar el contenido (vía panel, o seed si se implementa §10)
+- [x] 8.1 Verificar `.env.example` versionado (APP_KEYS, salts, ENCRYPTION_KEY, JWT_SECRET, bloque DATABASE) + `CLIENT_URL`
+- [x] 8.2 Nota en README: `cp .env.example .env` + generar valores (`openssl rand -base64 16`)
+- [x] 8.3 README: documentar cómo poblar el contenido (vía panel, o seed si se implementa §10)
 
 ## 9. Verificación
 
-- [ ] **9.1 Smoke test:**
+- [x] **9.1 Smoke test:**
   - `GET /api/portfolio` → 200 + componentes y `projects` poblados
   - `PUT/DELETE /api/portfolio` → 403/405 (público es solo lectura)
-- [ ] 9.2 Commit: `feat: portfolio read-only API`
+- [x] 9.2 Commit: `feat: portfolio read-only API`
 
 ## 10. Seed por código (PULIDO OPCIONAL — solo si sobra tiempo)
 
