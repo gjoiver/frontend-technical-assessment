@@ -35,18 +35,18 @@ API headless de solo lectura para el portafolio. Marca cada caja con `[x]`. Las 
 
 ## 5. Datos vía panel (desbloquea el frontend)
 
-- [ ] 5.1 Crear el contenido del portfolio en el **Content Manager** (aboutMe, contactInformation, ≥1 project, skills, experience, seo)
-- [ ] 5.2 Dar **Publish** (con draft&publish, la API pública solo devuelve lo publicado)
-- [ ] **5.3 Checkpoint:** `GET /api/portfolio` devuelve el contenido (campos planos visibles)
+- [x] 5.1 Crear el contenido del portfolio en el **Content Manager** (aboutMe, contactInformation, ≥1 project, skills, experience, seo)
+- [x] 5.2 Dar **Publish** (con draft&publish, la API pública solo devuelve lo publicado)
+- [x] **5.3 Checkpoint:** `GET /api/portfolio` devuelve el contenido (campos planos visibles)
 
 ## 6. Forma de la respuesta (populate)
 
-- [ ] 6.1 Override de `find` en el controller de `portfolio` para popular componentes + la dynamic zone `projects` por defecto (populate explícito, no `'*'`)
-- [ ] **6.2 Checkpoint:** `GET /api/portfolio` ya trae `contactInformation`, `projects`, `skills`, `experience`, `seo` poblados
+- [x] 6.1 Override de `find` en el controller de `portfolio` para popular componentes + la dynamic zone `projects` por defecto (populate explícito, no `'*'`)
+- [x] **6.2 Checkpoint:** `GET /api/portfolio` ya trae `contactInformation`, `projects`, `skills`, `experience`, `seo` poblados
 
 ## 7. CORS (acceso desde el navegador)
 
-- [ ] 7.1 CORS en `config/middlewares.ts` → `origin` desde env (default `http://localhost:5173`)
+- [ ] 7.1 CORS en `backend/config/middlewares.ts` → `origin` desde env (default `http://localhost:5173`)
 
 ## 8. Reproducibilidad (clon limpio)
 
