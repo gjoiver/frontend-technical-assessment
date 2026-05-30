@@ -97,8 +97,8 @@ backend/
 
 This backend was built with AI assistance (Claude) in a step-by-step guided flow:
 
-- **Roadmap design** and dependency-ordered tasks (permissions → content → populate → CORS), documented in `../ROADMAP.md`.
+- **Roadmap design** and dependency-ordered tasks (permissions → content → populate → CORS), documented in `./ROADMAP.md`.
 - **Reasoned architecture decisions**, dropping over-engineering where it added no value (e.g. formal Clean Architecture, plugin-based deep populate, a mandatory seed) in favor of idiomatic Strapi practices.
 - **Conceptual explanations** of roles/permissions, populate, TypeScript typing and CORS, with the code applied by hand to reinforce learning.
 
-See conventions in `../CLAUDE.md` and progress in `../ROADMAP.md`.
+See conventions in `../CLAUDE.md` and progress in `./ROADMAP.md`.

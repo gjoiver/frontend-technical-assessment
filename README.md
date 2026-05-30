@@ -1,29 +1,29 @@
 # Personal Creative Portfolio
 
-Monorepo del assessment front-end: un portafolio personal compuesto por un backend headless (Strapi) y una SPA (React) que lo consume.
+Front-end assessment monorepo: a personal portfolio made of a headless backend (Strapi) and a SPA (React) that consumes it.
 
-## Estructura
+## Structure
 
 ```
 .
-├── backend/    # API headless con Strapi 5 (TypeScript, SQLite) — solo lectura pública
-└── frontend/   # SPA con React 18 + Vite que consume la API (en construcción)
+├── backend/    # Headless API with Strapi 5 (TypeScript, SQLite) — public read-only
+└── frontend/   # React 18 + Vite SPA consuming the API (in progress)
 ```
 
-Cada carpeta es una app independiente con su propio `package.json`, se instala y se ejecuta por separado.
+Each folder is an independent app with its own `package.json`, installed and run separately.
 
-## Puesta en marcha
+## Getting started
 
 ### Backend
 
 ```bash
 cd backend
-cp .env.example .env   # luego generar valores: openssl rand -base64 16
+cp .env.example .env   # then generate values: openssl rand -base64 16
 npm install
-npm run develop        # http://localhost:1337  (admin en /admin, API en /api/portfolio)
+npm run develop        # http://localhost:1337  (admin at /admin, API at /api/portfolio)
 ```
 
-Ver [backend/README.md](backend/README.md) para detalles, el modelo de contenido y la superficie de la API.
+See [backend/README.md](backend/README.md) for details, the content model and the API surface.
 
 ### Frontend
 
@@ -33,9 +33,24 @@ npm install
 npm run dev            # http://localhost:5173
 ```
 
-> Pendiente de scaffolding.
+> Not scaffolded yet — see the work plan in [frontend/ROADMAP.md](frontend/ROADMAP.md).
 
-## Documentación
+## Frontend architecture & criteria
 
-- Guardrails y convenciones del backend: [CLAUDE.md](CLAUDE.md)
-- Roadmap del backend: [ROADMAP.md](ROADMAP.md)
+The SPA is built to meet the assessment criteria: **fully responsive (mobile-first)**, **clean-code and best architecture practices**, and **component structure + styling + one unit test**.
+
+Applied practices:
+
+- **Clean Architecture** in layers per feature — `core` (domain: entities, repository ports, use cases/interactors), `data` (datasources, DTOs + mappers, repository implementations), `presentation` (React: pages, atomic components, hooks).
+- **Repository + Interactor** consumption pattern: `Page → hook → ‹Action›UseCase (interactor) → Repository (port) → RepositoryImpl → DataSource → httpClient`.
+- **Feature-based** structure (`features/portfolio`, later `features/products`), with a root **`shared/`** kernel for cross-cutting dependencies (design system, HTTP client, config, theme).
+- **Atomic Design** for the UI: atoms → molecules → organisms → templates → pages.
+- **SOLID** principles, with dependency inversion wired at a composition root (`app/`).
+- **Rules of React** (https://react.dev/reference/rules): pure, idempotent components and hooks; immutable props/state; side effects only in effects/handlers.
+- **Testing:** Vitest + React Testing Library, using the **AAA** pattern and **Gherkin** (Given/When/Then) scenario descriptions.
+
+## Documentation
+
+- Backend guardrails and conventions: [CLAUDE.md](CLAUDE.md)
+- Backend roadmap: [backend/ROADMAP.md](backend/ROADMAP.md)
+- Frontend work plan: [frontend/ROADMAP.md](frontend/ROADMAP.md)

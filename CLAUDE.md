@@ -15,8 +15,8 @@ Strapi 5 headless CMS for a **Personal Creative Portfolio** (front-end technical
 ## Structure (monorepo)
 
 ```
-.                   repo root (git, README.md, CLAUDE.md, ROADMAP.md)
-backend/            the Strapi app — run all backend commands from here
+.                   repo root (git, README.md, CLAUDE.md)
+backend/            the Strapi app — run all backend commands from here (incl. ROADMAP.md)
   src/
     api/
       portfolio/    single type — content-types/ controllers/ routes/ services/ (all .ts)
