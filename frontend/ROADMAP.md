@@ -4,6 +4,7 @@ SPA que consume la API de Strapi (Ejercicio 1) y, más adelante, `fakestoreapi` 
 Marca cada caja con `[x]`. Las casillas en **negrita** son checkpoints de verificación.
 
 > **Criterios del assessment que guían este plan:**
+>
 > - Fully responsive (mobile-first).
 > - Clean-code y best architecture practices.
 > - Component structure + styling + **un** unit test.
@@ -15,7 +16,7 @@ Marca cada caja con `[x]`. Las casillas en **negrita** son checkpoints de verifi
 ## 0. Decisiones de arquitectura (resumen)
 
 - **Capas (Clean Architecture)** dentro de cada feature, con la dependencia apuntando hacia adentro:
-  - `core` → dominio puro: entidades, *puertos* (interfaces de repositorio), **use cases / interactors**. No conoce React ni HTTP.
+  - `core` → dominio puro: entidades, _puertos_ (interfaces de repositorio), **use cases / interactors**. No conoce React ni HTTP.
   - `data` → implementa los puertos del `core`: datasources (HTTP), DTOs + mappers, implementación de repositorios.
   - `presentation` → React: páginas, componentes (atomic), hooks. Depende de `core` (entidades/use cases), nunca de `data` directo.
 - **Patrón Repository + Interactor** (cadena de consumo desde el front):
@@ -25,13 +26,15 @@ Marca cada caja con `[x]`. Las casillas en **negrita** son checkpoints de verifi
                 → PortfolioRepository (puerto) → PortfolioRepositoryImpl
                 → StrapiPortfolioDataSource → httpClient
   ```
+
   - **Interactor** = el use case que la presentación consume (`GetPortfolioUseCase.execute()`). Orquesta la regla de aplicación y depende del **puerto**, no de la implementación.
   - **Repository** = puerto (interfaz) en `core` + implementación en `data`. Aísla el origen de datos.
+
 - **Convención de nombres:** use cases `‹Acción›‹Entidad›UseCase` (p. ej. `GetPortfolioUseCase`).
 - **Features** = slices verticales: `portfolio` (Ej. 1) y `products` (Ej. 2, después). Cada uno con sus 3 capas.
 - **`shared/`** (raíz de `src`) = núcleo transversal: design system (atomic), cliente HTTP, config, theme, tipos/utilidades comunes.
 - **Atomic Design** vive en presentación y `shared/ui`: atoms → molecules → organisms → templates → pages.
-- **Inversión de dependencias (SOLID-D):** la presentación recibe el interactor ya cableado en el *composition root* (`app/`); no instancia `data` por su cuenta.
+- **Inversión de dependencias (SOLID-D):** la presentación recibe el interactor ya cableado en el _composition root_ (`app/`); no instancia `data` por su cuenta.
 - **Rules of React:** componentes y hooks **puros** (sin efectos secundarios en el render), idempotentes; props/state **inmutables** (no mutar); efectos secundarios (fetch) solo en efectos/manejadores; respetar las **Rules of Hooks** (llamadas en el top level). Ref.: https://react.dev/reference/rules
 
 ### Estructura objetivo
@@ -80,14 +83,14 @@ frontend/
 
 ## 1. Scaffold y tooling
 
-- [ ] 1.1 Scaffold Vite + React 18 + TypeScript en `frontend/` (`npm create vite@latest . -- --template react-ts`)
-- [ ] 1.2 Instalar deps de UI: `styled-components` (+ tipos si aplica)
-- [ ] 1.3 Instalar router: `react-router-dom`
-- [ ] 1.4 Mover las deps de frontend que quedaron en `backend/package.json` (react, styled-components…) y dejar el backend limpio
+- [x] 1.1 Scaffold Vite + React 19 + TypeScript en `frontend/` (`npm create vite@latest . -- --template react-ts`)
+- [x] 1.2 Instalar deps de UI: `styled-components` (+ tipos si aplica)
+- [x] 1.3 Instalar router: `react-router-dom`
+- [x] ~~1.4 Mover deps de `backend/package.json`~~ — **N/A**: las deps react/styled-components del backend son del **admin de Strapi** (las necesita `strapi build`); el frontend tiene su propio `package.json`. No se mueve nada.
 - [ ] 1.5 Configurar **path aliases** (`@/`, `@shared`, `@features`) en `vite.config.ts` + `tsconfig`
 - [ ] 1.6 ESLint + Prettier (clean code) — opcional si Vite no los trae ya
 - [ ] 1.7 `.env` del front: `VITE_API_URL=http://localhost:1337` (+ `.env.example`)
-- [ ] **1.8 Checkpoint:** `npm run dev` levanta en `http://localhost:5173`
+- [x] **1.8 Checkpoint:** `npm run dev` levanta en `http://localhost:5173`
 
 ## 2. Shared kernel
 
@@ -115,7 +118,7 @@ frontend/
 - [ ] 5.1 `hooks/usePortfolio.ts`: ejecuta `GetPortfolioUseCase`, expone `{ data, loading, error }` (fetch en efecto; hook **puro**, sin mutaciones)
 - [ ] 5.2 Organisms por sección (atomic): `AboutSection`, `ProjectList`, `SkillGrid`, `ExperienceList`, `ContactCard`
 - [ ] 5.3 `pages/PortfolioPage.tsx`: compone las secciones (template) + estados loading/error
-- [ ] 5.4 Render de campos *blocks* de Strapi (`aboutMe`, `description`, `responsibilities`) — helper de render
+- [ ] 5.4 Render de campos _blocks_ de Strapi (`aboutMe`, `description`, `responsibilities`) — helper de render
 - [ ] **5.5 Checkpoint Rules of React:** componentes/hooks puros e idempotentes, sin mutar props/state, efectos solo para sincronizar (https://react.dev/reference/rules)
 
 ## 6. Composition root (`app/`)

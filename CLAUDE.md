@@ -10,7 +10,7 @@ Strapi 5 headless CMS for a **Personal Creative Portfolio** (front-end technical
 
 - **Strapi 5.47.0** · **SQLite** (`better-sqlite3`) · **TypeScript**
 - **Node:** 20–24 (see `backend/package.json` `engines`)
-- Note: frontend deps (`react`, `react-dom`, `react-router-dom`, `styled-components`) are still in `backend/package.json` from the Strapi scaffold — they belong to the SPA and should move to `frontend/` once it's scaffolded.
+- Note: `backend/package.json` includes `react`, `react-dom`, `react-router-dom`, `styled-components` — these are Strapi's **admin panel** deps (needed by `strapi build`), NOT the SPA's. The SPA has its own `frontend/package.json` (React 19). Do not remove them from the backend.
 
 ## Structure (monorepo)
 
