@@ -1,7 +1,6 @@
 import { Text } from "@shared/ui/atoms";
-import { Card, Expandable, SectionTitle } from "@shared/ui/molecules";
+import { Card, Expandable, RichTextRenderer, SectionTitle } from "@shared/ui/molecules";
 import { portfolioI18n } from "@portfolio/presentation/i18n";
-import { RichTextRenderer } from "../RichTextRenderer";
 import { List, Meta } from "./ExperienceList.styles";
 import type { ExperienceListProps } from "./ExperienceList.types";
 

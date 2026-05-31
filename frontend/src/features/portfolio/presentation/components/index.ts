@@ -1,5 +1,4 @@
 export * from "./Header";
-export * from "./RichTextRenderer";
 export * from "./AboutSection";
 export * from "./ProjectList";
 export * from "./SkillGrid";

@@ -1,9 +1,8 @@
 import { Text, Tag } from "@shared/ui/atoms";
-import { Card, Expandable, SectionTitle } from "@shared/ui/molecules";
+import { Card, Expandable, RichTextRenderer, SectionTitle } from "@shared/ui/molecules";
 import { portfolioI18n } from "@portfolio/presentation/i18n";
 import { Grid, Technologies } from "./ProjectList.styles";
 import type { ProjectListProps } from "./ProjectList.types";
-import { RichTextRenderer } from "../RichTextRenderer";
 
 export function ProjectList({ projects }: ProjectListProps) {
   if (projects.length === 0) return null;

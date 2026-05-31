@@ -154,10 +154,62 @@ frontend/
 
 ---
 
-## Más adelante (Ejercicio 2)
+# Ejercicio 2 — Products (integración API + manejo de errores)
 
-- [ ] Feature `products`: consumir `https://fakestoreapi.com/products` reutilizando `shared/lib/http`
-- [ ] Manejo de errores detallado (5xx, 4xx, red)
-- [ ] Página simple listando títulos de productos + copy desde Strapi (single type `Page`)
+> **Decisiones:** Page de Strapi = `title` + `intro` · carga **combinada** (un use case trae productos + copy) · mostrar `title` / `price` / `category` / `image` · test del **branching de errores por `HttpError.type`** (`HttpErrorType`). **Reutiliza** del Ej. 1: `httpClient` + `HttpError` (`type`), contratos `Mapper`/`UseCase`, capas core/data/presentation, i18n y design system.
+
+> **Prerequisito (backend):** el single type `Page` (**E2.1**) vive en `../backend/ROADMAP.md`. El frontend asume `GET /api/page` disponible.
+
+> **Paginación (client-side):** fakestoreapi devuelve **todos** los productos de una vez → la paginación se hace en la UI (`usePagination` rebana el array). Por defecto **10/página**, con **botones** de tamaño `[10, 20, 50]` y "Página X de Y". Componentes en `shared/ui`.
+
+## E2.2 Shared — segundo origen HTTP + ErrorState
+
+- [x] E2.2.1 `lib/config`: añadir `VITE_FAKESTORE_URL` (default `https://fakestoreapi.com`)
+- [x] E2.2.2 Confirmar reuso de `createHttpClient(baseUrl)` → una instancia por origen
+- [x] E2.2.3 `ui/molecules/ErrorState` (genérico): recibe un mensaje y lo pinta (el mapeo `type → mensaje` vive en la feature, ver E2.5.4)
+
+## E2.3 Feature `products` — core
+
+- [x] E2.3.1 `entities/`: `Product` (id, title, price, category, image), `PageContent` (title, intro), `ProductsView` (`{ page, products }`)
+- [x] E2.3.2 `repositories/` (puertos): `ProductRepository.getProducts()`, `PageRepository.getPage()`
+- [x] E2.3.3 `usecases/GetProductsPageUseCase`: combina ambos (`Promise.all`), devuelve `ProductsView` (`UseCase<void, ProductsView>`)
+- [x] E2.3.4 `interactors/ProductsInteractor`: expone `getProductsPage()`
+
+## E2.4 Feature `products` — data
+
+- [x] E2.4.1 fakestoreapi: `ProductDto` + `productMapper` (extends `Mapper`) + `FakeStoreProductDataSource` + `ProductRepositoryImpl`
+- [x] E2.4.2 strapi page: `PageResponse` (dto) + `pageMapper` + `StrapiPageDataSource` + `PageRepositoryImpl`
+
+## E2.5 Feature `products` — presentation (+ promociones a `shared`)
+
+**Shared (prerequisitos de UI):**
+
+- [x] E2.5.1 Promover `RichTextRenderer` `portfolio → shared/ui/molecules` (lo usan ambas features para renderizar blocks); actualizar imports de portfolio
+- [x] E2.5.2 `shared/ui/hooks/usePagination<T>`: estado `page`/`pageSize` + valores **derivados** (`pageItems`, `totalPages`) — sin efectos (Rules of React)
+- [x] E2.5.3 `shared/ui/molecules/Pagination`: **botones** de tamaño (`[10, 20, 50]`) + prev/next (deshabilitados en bordes) + texto "Página X de Y"
+
+**Products:**
+
+- [x] E2.5.4 `i18n/products.i18n` + `resolveProductsError(error)`: mapa puro `HttpErrorType → mensaje` (+ `unknown`) — función pura, **la testea E2.7**
+- [x] E2.5.5 `hooks/useProductsPage` (`{ data, loading, error }`, llama `ProductsInteractor.getProductsPage()`)
+- [x] E2.5.6 `components/ProductGrid` (organism): card con `image` + `title` + `price` + `category` (responsive 1→2→3 col)
+- [x] E2.5.7 `pages/ProductsPage` (loading / error con `resolveProductsError`) + `components/ProductsContent` (recibe `data` garantizada → `usePagination` + `Pagination` + `ProductGrid`) — **dividido** para respetar las Rules of Hooks
+
+## E2.6 Composition root + routing
+
+- [x] E2.6.1 Cablear **dos** httpClients (Strapi + fakestore) → datasources → repos → use case → interactor
+- [x] E2.6.2 `router`: ruta `/products` → `ProductsPage`
+- [x] E2.6.3 (opcional) navegación entre `/` y `/products`
+- [x] **E2.6.4 Checkpoint:** `/products` muestra el copy de Strapi + grid de productos de fakestoreapi
+
+## E2.7 Testing (branching de errores)
+
+- [x] E2.7.1 Test: dado un `HttpError` de cada `type` (`server` / `client` / `network` / `parse`), el mapeo `type → mensaje` devuelve el texto correcto — **AAA + Gherkin**, fixtures en `data/mocks`
+- [x] **E2.7.2 Checkpoint:** `npm run test` en verde
+
+## E2.8 Cierre
+
+- [x] E2.8.1 README frontend: feature `products` + **AI Usage** del Ej. 2 (open loops / happy / edge / errors)
+- [x] E2.8.2 Commit
 
 **Transversal:** conventional commits y anotar el uso de IA mientras avanzas.

@@ -2,6 +2,8 @@
 
 import { Core } from "@strapi/strapi";
 
+import { seed } from "./seed";
+
 export default {
   /**
    * An asynchronous register function that runs before
@@ -25,18 +27,22 @@ export default {
 
     if (!publicRole) return;
 
-    const action = "api::portfolio.portfolio.find";
+    const actions = ["api::portfolio.portfolio.find", "api::page.page.find"];
 
-    const exists = await strapi
-      .query("plugin::users-permissions.permission")
-      .findOne({ where: { action, role: publicRole.id } });
-
-    if (!exists) {
-      await strapi
+    for (const action of actions) {
+      const exists = await strapi
         .query("plugin::users-permissions.permission")
-        .create({ data: { action, role: publicRole.id } });
+        .findOne({ where: { action, role: publicRole.id } });
 
-      strapi.log.info(`[bootstrap] Permis públic habilitado: ${action}`);
+      if (!exists) {
+        await strapi
+          .query("plugin::users-permissions.permission")
+          .create({ data: { action, role: publicRole.id } });
+
+        strapi.log.info(`[bootstrap] Permiso público habilitado: ${action}`);
+      }
     }
+
+    await seed({ strapi });
   },
 };

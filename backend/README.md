@@ -47,13 +47,11 @@ cd backend
 
 ## Loading content
 
-The database (`.tmp/data.db`) is gitignored, so a fresh clone starts **with no content**. To populate it:
+The database (`.tmp/data.db`) is gitignored, so a fresh clone starts **with no content** — but it **seeds itself automatically**. On first boot, `bootstrap` ([src/index.ts](src/index.ts)) creates and **publishes** the `portfolio` and `page` single types from [src/seed/](src/seed/), so `GET /api/portfolio` and `GET /api/page` return populated content with **no admin step**.
 
-1. Open the admin → **Content Manager** → **Portfolio** (Single Types).
-2. Fill in the fields (see _Content model_ below). Required: `project.title`, `skill.name`, `experience.title` + `company`, `seo.metaTitle` + `metaDescription`.
-3. Click **Publish** — with _draft & publish_ enabled, the public API only returns published content.
+The seed is **idempotent**: it runs only when a single type has no document yet (checked via `strapi.documents(...).findFirst()`), so it never overwrites content you edit later. To change the content, edit it in the admin → **Content Manager** and **Publish** (with _draft & publish_ on, the public API only returns published content).
 
-Until you publish, `GET /api/portfolio` returns `data: null`. That's expected.
+To re-test the clean-clone path, delete `.tmp/data.db` and restart — the seed repopulates everything.
 
 ## API
 
@@ -103,7 +101,8 @@ backend/
 This backend was built with AI assistance (Claude) in a step-by-step guided flow:
 
 - **Roadmap design** and dependency-ordered tasks (permissions → content → populate → CORS), documented in `./ROADMAP.md`.
-- **Reasoned architecture decisions**, dropping over-engineering where it added no value (e.g. formal Clean Architecture, plugin-based deep populate, a mandatory seed) in favor of idiomatic Strapi practices.
+- **Reasoned architecture decisions**, dropping over-engineering where it added no value (e.g. formal Clean Architecture, plugin-based deep populate) in favor of idiomatic Strapi practices.
+- **Idempotent bootstrap** that grants the public `find` permission and **seeds + publishes** the content (Document Service API), so a clean clone serves data with no manual admin step.
 - **Conceptual explanations** of roles/permissions, populate, TypeScript typing and CORS, with the code applied by hand to reinforce learning.
 
 See conventions in `../CLAUDE.md` and progress in `./ROADMAP.md`.

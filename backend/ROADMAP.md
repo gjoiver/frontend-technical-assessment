@@ -65,16 +65,22 @@ API headless de solo lectura para el portafolio. Marca cada caja con `[x]`. Las 
 
 > Beneficio: un clon limpio (`.tmp/data.db` borrado) levanta con contenido sin tocar el panel. Demuestra bootstrap idempotente + Document Service. No es requisito del assessment.
 
-- [ ] 10.1 `src/seed/portfolio.ts`: contenido por defecto tipado (≥1 project, skills, contact, seo)
-- [ ] 10.2 Bootstrap: si no existe portfolio, crear y publicar (`strapi.documents`, `status: 'published'`), idempotente
-- [ ] 10.3 **Verificar clon limpio:** borrar `.tmp/data.db`, reiniciar, y el endpoint responde poblado sin tocar el panel
+- [x] 10.1 `src/seed/` (`portfolio.seed.ts` + `page.seed.ts` + `index.ts`): contenido por defecto (project con `technologies` como array, skills, contact, seo, experience) + page
+- [x] 10.2 Bootstrap: si el single type no existe, crear y publicar (`strapi.documents(...).create` + `.publish`), idempotente vía `findFirst()`
+- [x] 10.3 **Verificar clon limpio:** borrar `.tmp/data.db`, reiniciar, y los endpoints (`/api/portfolio`, `/api/page`) responden poblados sin tocar el panel
 
 ---
 
-## Más adelante (cuando llegue el Ejercicio 2)
+# Ejercicio 2 — Backend (single type `Page`)
 
-- [ ] Single type `Page` para el copy de la página de productos (title, intro)
-- [ ] Permiso público `find` para `Page` en el bootstrap
+> El copy de la página de productos vive en Strapi (como en el Ej. 1). La feature `products` del frontend está en `../frontend/ROADMAP.md` (§E2.2+) y asume `GET /api/page` disponible.
+
+## E2.1 Single type `Page`
+
+- [x] E2.1.1 Crear single type `Page` (`title` string, `intro` blocks) con draft & publish — vía Content-Type Builder
+- [x] E2.1.2 Bootstrap: añadir permiso público `find` para `api::page.page` (loop de acciones, idempotente)
+- [x] E2.1.3 Crear + **publicar** el copy (title, intro) por el panel
+- [x] **E2.1.4 Checkpoint:** `GET /api/page` → 200 con `title`/`intro`
 
 ---
 
