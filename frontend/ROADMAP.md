@@ -160,6 +160,8 @@ frontend/
 
 > **Prerequisito (backend):** el single type `Page` (**E2.1**) vive en `../backend/ROADMAP.md`. El frontend asume `GET /api/page` disponible.
 
+> **Paginación (client-side):** fakestoreapi devuelve **todos** los productos de una vez → la paginación se hace en la UI (`usePagination` rebana el array). Por defecto **10/página**, con **botones** de tamaño `[10, 20, 50]` y "Página X de Y". Componentes en `shared/ui`.
+
 ## E2.2 Shared — segundo origen HTTP + ErrorState
 
 - [x] E2.2.1 `lib/config`: añadir `VITE_FAKESTORE_URL` (default `https://fakestoreapi.com`)
@@ -175,15 +177,23 @@ frontend/
 
 ## E2.4 Feature `products` — data
 
-- [ ] E2.4.1 fakestoreapi: `ProductDto` + `productMapper` (extends `Mapper`) + `FakeStoreProductDataSource` + `ProductRepositoryImpl`
-- [ ] E2.4.2 strapi page: `PageResponse` (dto) + `pageMapper` + `StrapiPageDataSource` + `PageRepositoryImpl`
+- [x] E2.4.1 fakestoreapi: `ProductDto` + `productMapper` (extends `Mapper`) + `FakeStoreProductDataSource` + `ProductRepositoryImpl`
+- [x] E2.4.2 strapi page: `PageResponse` (dto) + `pageMapper` + `StrapiPageDataSource` + `PageRepositoryImpl`
 
-## E2.5 Feature `products` — presentation
+## E2.5 Feature `products` — presentation (+ promociones a `shared`)
 
-- [ ] E2.5.1 `hooks/useProductsPage` (`{ data, loading, error }`)
-- [ ] E2.5.2 `pages/ProductsPage`: loading / **error (branch por `error.type`)** / data; copy de Strapi con **fallback** si falta
-- [ ] E2.5.3 `components/ProductGrid` (organism): title + price + category + image (responsive)
-- [ ] E2.5.4 `i18n/products.i18n`: fallback del copy, labels, y **mapa `HttpErrorType → mensaje`** (`server`/`client`/`network`/`parse`) — función pura (la testea E2.7)
+**Shared (prerequisitos de UI):**
+
+- [x] E2.5.1 Promover `RichTextRenderer` `portfolio → shared/ui/molecules` (lo usan ambas features para renderizar blocks); actualizar imports de portfolio
+- [ ] E2.5.2 `shared/ui/hooks/usePagination<T>`: estado `page`/`pageSize` + valores **derivados** (`pageItems`, `totalPages`) — sin efectos (Rules of React)
+- [ ] E2.5.3 `shared/ui/molecules/Pagination`: **botones** de tamaño (`[10, 20, 50]`) + prev/next (deshabilitados en bordes) + texto "Página X de Y"
+
+**Products:**
+
+- [ ] E2.5.4 `i18n/products.i18n` + `resolveProductsError(error)`: mapa puro `HttpErrorType → mensaje` (+ `unknown`) — función pura, **la testea E2.7**
+- [ ] E2.5.5 `hooks/useProductsPage` (`{ data, loading, error }`, llama `ProductsInteractor.getProductsPage()`)
+- [ ] E2.5.6 `components/ProductGrid` (organism): card con `image` + `title` + `price` + `category` (responsive 1→2→3 col)
+- [ ] E2.5.7 `pages/ProductsPage` (loading / error con `resolveProductsError`) + `components/ProductsContent` (recibe `data` garantizada → `usePagination` + `Pagination` + `ProductGrid`) — **dividido** para respetar las Rules of Hooks
 
 ## E2.6 Composition root + routing
 
