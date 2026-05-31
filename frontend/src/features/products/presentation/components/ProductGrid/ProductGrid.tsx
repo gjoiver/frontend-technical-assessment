@@ -1,6 +1,6 @@
-import { Text, Tag } from "@shared/ui/atoms";
-import { Card } from "@shared/ui/molecules";
-import { Grid, Image, Info, Price } from "./ProductGrid.styles";
+import { Text } from "@shared/ui/atoms";
+import { formatCurrency } from "@shared/utils";
+import { Grid, ProductCard, Image, Body, Category, Price } from "./ProductGrid.styles";
 import type { ProductGridProps } from "./ProductGrid.types";
 
 export function ProductGrid({ products }: ProductGridProps) {
@@ -9,14 +9,14 @@ export function ProductGrid({ products }: ProductGridProps) {
   return (
     <Grid>
       {products.map((product) => (
-        <Card key={product.id}>
+        <ProductCard key={product.id}>
           <Image src={product.image} alt={product.title} loading="lazy" />
-          <Info>
-            <Tag>{product.category}</Tag>
+          <Body>
+            <Category>{product.category}</Category>
             <Text variant="body">{product.title}</Text>
-            <Price>${product.price.toFixed(2)}</Price>
-          </Info>
-        </Card>
+          </Body>
+          <Price>{formatCurrency(product.price)}</Price>
+        </ProductCard>
       ))}
     </Grid>
   );

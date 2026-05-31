@@ -185,22 +185,22 @@ frontend/
 **Shared (prerequisitos de UI):**
 
 - [x] E2.5.1 Promover `RichTextRenderer` `portfolio → shared/ui/molecules` (lo usan ambas features para renderizar blocks); actualizar imports de portfolio
-- [ ] E2.5.2 `shared/ui/hooks/usePagination<T>`: estado `page`/`pageSize` + valores **derivados** (`pageItems`, `totalPages`) — sin efectos (Rules of React)
-- [ ] E2.5.3 `shared/ui/molecules/Pagination`: **botones** de tamaño (`[10, 20, 50]`) + prev/next (deshabilitados en bordes) + texto "Página X de Y"
+- [x] E2.5.2 `shared/ui/hooks/usePagination<T>`: estado `page`/`pageSize` + valores **derivados** (`pageItems`, `totalPages`) — sin efectos (Rules of React)
+- [x] E2.5.3 `shared/ui/molecules/Pagination`: **botones** de tamaño (`[10, 20, 50]`) + prev/next (deshabilitados en bordes) + texto "Página X de Y"
 
 **Products:**
 
-- [ ] E2.5.4 `i18n/products.i18n` + `resolveProductsError(error)`: mapa puro `HttpErrorType → mensaje` (+ `unknown`) — función pura, **la testea E2.7**
-- [ ] E2.5.5 `hooks/useProductsPage` (`{ data, loading, error }`, llama `ProductsInteractor.getProductsPage()`)
-- [ ] E2.5.6 `components/ProductGrid` (organism): card con `image` + `title` + `price` + `category` (responsive 1→2→3 col)
-- [ ] E2.5.7 `pages/ProductsPage` (loading / error con `resolveProductsError`) + `components/ProductsContent` (recibe `data` garantizada → `usePagination` + `Pagination` + `ProductGrid`) — **dividido** para respetar las Rules of Hooks
+- [x] E2.5.4 `i18n/products.i18n` + `resolveProductsError(error)`: mapa puro `HttpErrorType → mensaje` (+ `unknown`) — función pura, **la testea E2.7**
+- [x] E2.5.5 `hooks/useProductsPage` (`{ data, loading, error }`, llama `ProductsInteractor.getProductsPage()`)
+- [x] E2.5.6 `components/ProductGrid` (organism): card con `image` + `title` + `price` + `category` (responsive 1→2→3 col)
+- [x] E2.5.7 `pages/ProductsPage` (loading / error con `resolveProductsError`) + `components/ProductsContent` (recibe `data` garantizada → `usePagination` + `Pagination` + `ProductGrid`) — **dividido** para respetar las Rules of Hooks
 
 ## E2.6 Composition root + routing
 
-- [ ] E2.6.1 Cablear **dos** httpClients (Strapi + fakestore) → datasources → repos → use case → interactor
-- [ ] E2.6.2 `router`: ruta `/products` → `ProductsPage`
-- [ ] E2.6.3 (opcional) navegación entre `/` y `/products`
-- [ ] **E2.6.4 Checkpoint:** `/products` muestra el copy de Strapi + grid de productos de fakestoreapi
+- [x] E2.6.1 Cablear **dos** httpClients (Strapi + fakestore) → datasources → repos → use case → interactor
+- [x] E2.6.2 `router`: ruta `/products` → `ProductsPage`
+- [x] E2.6.3 (opcional) navegación entre `/` y `/products`
+- [x] **E2.6.4 Checkpoint:** `/products` muestra el copy de Strapi + grid de productos de fakestoreapi
 
 ## E2.7 Testing (branching de errores)
 
