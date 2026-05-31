@@ -168,10 +168,10 @@ frontend/
 
 ## E2.3 Feature `products` — core
 
-- [ ] E2.3.1 `entities/`: `Product` (id, title, price, category, image), `PageContent` (title, intro), `ProductsView` (`{ page, products }`)
-- [ ] E2.3.2 `repositories/` (puertos): `ProductRepository.getProducts()`, `PageRepository.getPage()`
-- [ ] E2.3.3 `usecases/GetProductsPageUseCase`: combina ambos (`Promise.all`), devuelve `ProductsView` (`UseCase<void, ProductsView>`)
-- [ ] E2.3.4 `interactors/ProductsInteractor`: expone `getProductsPage()`
+- [x] E2.3.1 `entities/`: `Product` (id, title, price, category, image), `PageContent` (title, intro), `ProductsView` (`{ page, products }`)
+- [x] E2.3.2 `repositories/` (puertos): `ProductRepository.getProducts()`, `PageRepository.getPage()`
+- [x] E2.3.3 `usecases/GetProductsPageUseCase`: combina ambos (`Promise.all`), devuelve `ProductsView` (`UseCase<void, ProductsView>`)
+- [x] E2.3.4 `interactors/ProductsInteractor`: expone `getProductsPage()`
 
 ## E2.4 Feature `products` — data
 
