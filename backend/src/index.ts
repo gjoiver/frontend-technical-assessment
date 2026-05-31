@@ -2,6 +2,8 @@
 
 import { Core } from "@strapi/strapi";
 
+import { seed } from "./seed";
+
 export default {
   /**
    * An asynchronous register function that runs before
@@ -40,5 +42,7 @@ export default {
         strapi.log.info(`[bootstrap] Permiso público habilitado: ${action}`);
       }
     }
+
+    await seed({ strapi });
   },
 };

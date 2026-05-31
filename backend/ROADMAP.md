@@ -65,9 +65,9 @@ API headless de solo lectura para el portafolio. Marca cada caja con `[x]`. Las 
 
 > Beneficio: un clon limpio (`.tmp/data.db` borrado) levanta con contenido sin tocar el panel. Demuestra bootstrap idempotente + Document Service. No es requisito del assessment.
 
-- [ ] 10.1 `src/seed/portfolio.ts`: contenido por defecto tipado (≥1 project, skills, contact, seo)
-- [ ] 10.2 Bootstrap: si no existe portfolio, crear y publicar (`strapi.documents`, `status: 'published'`), idempotente
-- [ ] 10.3 **Verificar clon limpio:** borrar `.tmp/data.db`, reiniciar, y el endpoint responde poblado sin tocar el panel
+- [x] 10.1 `src/seed/` (`portfolio.seed.ts` + `page.seed.ts` + `index.ts`): contenido por defecto (project con `technologies` como array, skills, contact, seo, experience) + page
+- [x] 10.2 Bootstrap: si el single type no existe, crear y publicar (`strapi.documents(...).create` + `.publish`), idempotente vía `findFirst()`
+- [x] 10.3 **Verificar clon limpio:** borrar `.tmp/data.db`, reiniciar, y los endpoints (`/api/portfolio`, `/api/page`) responden poblados sin tocar el panel
 
 ---
 

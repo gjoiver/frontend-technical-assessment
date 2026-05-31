@@ -23,7 +23,7 @@ npm install
 npm run develop        # http://localhost:1337  (admin at /admin, API at /api/portfolio)
 ```
 
-See [backend/README.md](backend/README.md) for details, the content model and the API surface.
+On first boot the backend **seeds and publishes its content automatically** (idempotent), so a clean clone serves data with no admin step. See [backend/README.md](backend/README.md) for details, the content model and the API surface.
 
 ### Frontend
 
