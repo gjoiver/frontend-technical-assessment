@@ -112,6 +112,7 @@ The SPA lives in `frontend/` (its own `package.json`). Run frontend commands fro
   Prop-less components skip `.types.ts`. Re-export types with `export type *`. Barrel each level (`atoms/index.ts`, …).
 - **Dependency inversion (SOLID-D):** wire concrete deps at the composition root (`src/app/`); presentation receives the interactor already built, never instantiates `data`.
 - **Naming:** use cases are `‹Action›‹Entity›UseCase` (e.g. `GetPortfolioUseCase`), exposing `execute()`.
+- **Data-layer naming:** wire-shape types carry a suffix to disambiguate from the domain entities (`Contact` entity vs `ContactDto` wire). `Response` for the top-level API envelope (`PortfolioResponse` = `{ data, meta }`); `Dto` for the nested pieces (`PortfolioDataDto`, `ProjectDto`, `SkillDto`, …). Never bare (clashes with entities), never combined (`ResponseDto`).
 - **Path aliases:** `@/` → `src`, `@shared` → `src/shared`, `@features` → `src/features` (configured in `vite.config.ts` + `tsconfig.app.json`).
 
 ### TypeScript / class style
