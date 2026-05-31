@@ -162,9 +162,9 @@ frontend/
 
 ## E2.2 Shared — segundo origen HTTP + ErrorState
 
-- [ ] E2.2.1 `lib/config`: añadir `VITE_FAKESTORE_URL` (default `https://fakestoreapi.com`)
-- [ ] E2.2.2 Confirmar reuso de `createHttpClient(baseUrl)` → una instancia por origen
-- [ ] E2.2.3 `ui/molecules/ErrorState` (genérico): recibe un mensaje y lo pinta (el mapeo `type → mensaje` vive en la feature, ver E2.5.4)
+- [x] E2.2.1 `lib/config`: añadir `VITE_FAKESTORE_URL` (default `https://fakestoreapi.com`)
+- [x] E2.2.2 Confirmar reuso de `createHttpClient(baseUrl)` → una instancia por origen
+- [x] E2.2.3 `ui/molecules/ErrorState` (genérico): recibe un mensaje y lo pinta (el mapeo `type → mensaje` vive en la feature, ver E2.5.4)
 
 ## E2.3 Feature `products` — core
 
