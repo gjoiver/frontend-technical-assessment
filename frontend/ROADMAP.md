@@ -154,10 +154,52 @@ frontend/
 
 ---
 
-## Más adelante (Ejercicio 2)
+# Ejercicio 2 — Products (integración API + manejo de errores)
 
-- [ ] Feature `products`: consumir `https://fakestoreapi.com/products` reutilizando `shared/lib/http`
-- [ ] Manejo de errores detallado (5xx, 4xx, red)
-- [ ] Página simple listando títulos de productos + copy desde Strapi (single type `Page`)
+> **Decisiones:** Page de Strapi = `title` + `intro` · carga **combinada** (un use case trae productos + copy) · mostrar `title` / `price` / `category` / `image` · test del **branching de errores por `HttpError.type`** (`HttpErrorType`). **Reutiliza** del Ej. 1: `httpClient` + `HttpError` (`type`), contratos `Mapper`/`UseCase`, capas core/data/presentation, i18n y design system.
+
+> **Prerequisito (backend):** el single type `Page` (**E2.1**) vive en `../backend/ROADMAP.md`. El frontend asume `GET /api/page` disponible.
+
+## E2.2 Shared — segundo origen HTTP + ErrorState
+
+- [ ] E2.2.1 `lib/config`: añadir `VITE_FAKESTORE_URL` (default `https://fakestoreapi.com`)
+- [ ] E2.2.2 Confirmar reuso de `createHttpClient(baseUrl)` → una instancia por origen
+- [ ] E2.2.3 `ui/molecules/ErrorState` (genérico): recibe un mensaje y lo pinta (el mapeo `type → mensaje` vive en la feature, ver E2.5.4)
+
+## E2.3 Feature `products` — core
+
+- [ ] E2.3.1 `entities/`: `Product` (id, title, price, category, image), `PageContent` (title, intro), `ProductsView` (`{ page, products }`)
+- [ ] E2.3.2 `repositories/` (puertos): `ProductRepository.getProducts()`, `PageRepository.getPage()`
+- [ ] E2.3.3 `usecases/GetProductsPageUseCase`: combina ambos (`Promise.all`), devuelve `ProductsView` (`UseCase<void, ProductsView>`)
+- [ ] E2.3.4 `interactors/ProductsInteractor`: expone `getProductsPage()`
+
+## E2.4 Feature `products` — data
+
+- [ ] E2.4.1 fakestoreapi: `ProductDto` + `productMapper` (extends `Mapper`) + `FakeStoreProductDataSource` + `ProductRepositoryImpl`
+- [ ] E2.4.2 strapi page: `PageResponse` (dto) + `pageMapper` + `StrapiPageDataSource` + `PageRepositoryImpl`
+
+## E2.5 Feature `products` — presentation
+
+- [ ] E2.5.1 `hooks/useProductsPage` (`{ data, loading, error }`)
+- [ ] E2.5.2 `pages/ProductsPage`: loading / **error (branch por `error.type`)** / data; copy de Strapi con **fallback** si falta
+- [ ] E2.5.3 `components/ProductGrid` (organism): title + price + category + image (responsive)
+- [ ] E2.5.4 `i18n/products.i18n`: fallback del copy, labels, y **mapa `HttpErrorType → mensaje`** (`server`/`client`/`network`/`parse`) — función pura (la testea E2.7)
+
+## E2.6 Composition root + routing
+
+- [ ] E2.6.1 Cablear **dos** httpClients (Strapi + fakestore) → datasources → repos → use case → interactor
+- [ ] E2.6.2 `router`: ruta `/products` → `ProductsPage`
+- [ ] E2.6.3 (opcional) navegación entre `/` y `/products`
+- [ ] **E2.6.4 Checkpoint:** `/products` muestra el copy de Strapi + grid de productos de fakestoreapi
+
+## E2.7 Testing (branching de errores)
+
+- [ ] E2.7.1 Test: dado un `HttpError` de cada `type` (`server` / `client` / `network` / `parse`), el mapeo `type → mensaje` devuelve el texto correcto — **AAA + Gherkin**, fixtures en `data/mocks`
+- [ ] **E2.7.2 Checkpoint:** `npm run test` en verde
+
+## E2.8 Cierre
+
+- [ ] E2.8.1 README frontend: feature `products` + **AI Usage** del Ej. 2 (open loops / happy / edge / errors)
+- [ ] E2.8.2 Commit
 
 **Transversal:** conventional commits y anotar el uso de IA mientras avanzas.

@@ -71,10 +71,16 @@ API headless de solo lectura para el portafolio. Marca cada caja con `[x]`. Las 
 
 ---
 
-## Más adelante (cuando llegue el Ejercicio 2)
+# Ejercicio 2 — Backend (single type `Page`)
 
-- [ ] Single type `Page` para el copy de la página de productos (title, intro)
-- [ ] Permiso público `find` para `Page` en el bootstrap
+> El copy de la página de productos vive en Strapi (como en el Ej. 1). La feature `products` del frontend está en `../frontend/ROADMAP.md` (§E2.2+) y asume `GET /api/page` disponible.
+
+## E2.1 Single type `Page`
+
+- [x] E2.1.1 Crear single type `Page` (`title` string, `intro` blocks) con draft & publish — vía Content-Type Builder
+- [x] E2.1.2 Bootstrap: añadir permiso público `find` para `api::page.page` (loop de acciones, idempotente)
+- [x] E2.1.3 Crear + **publicar** el copy (title, intro) por el panel
+- [x] **E2.1.4 Checkpoint:** `GET /api/page` → 200 con `title`/`intro`
 
 ---
 
