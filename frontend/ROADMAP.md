@@ -110,10 +110,10 @@ frontend/
 
 ## 4. Feature `portfolio` — capa `data`
 
-- [ ] 4.1 `dto/PortfolioDto.ts`: forma cruda de la respuesta de Strapi (`{ data: {...} }`)
-- [ ] 4.2 `dto/portfolioMapper.ts`: DTO → entidad de dominio (aísla a la UI de cambios en la API)
-- [ ] 4.3 `datasources/StrapiPortfolioDataSource.ts`: usa `httpClient` para `GET /api/portfolio`
-- [ ] 4.4 `repositories/PortfolioRepositoryImpl.ts`: implementa el puerto usando datasource + mapper
+- [x] 4.1 `dto/PortfolioDto.ts`: forma cruda de la respuesta de Strapi (`{ data: {...} }`)
+- [x] 4.2 `dto/portfolioMapper.ts`: DTO → entidad de dominio (aísla a la UI de cambios en la API)
+- [x] 4.3 `datasources/StrapiPortfolioDataSource.ts`: usa `httpClient` para `GET /api/portfolio`
+- [x] 4.4 `repositories/PortfolioRepositoryImpl.ts`: implementa el puerto usando datasource + mapper
 
 ## 5. Feature `portfolio` — capa `presentation`
 

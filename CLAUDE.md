@@ -113,7 +113,9 @@ The SPA lives in `frontend/` (its own `package.json`). Run frontend commands fro
 - **Dependency inversion (SOLID-D):** wire concrete deps at the composition root (`src/app/`); presentation receives the interactor already built, never instantiates `data`.
 - **Naming:** use cases are `‹Action›‹Entity›UseCase` (e.g. `GetPortfolioUseCase`), exposing `execute()`.
 - **Data-layer naming:** wire-shape types carry a suffix to disambiguate from the domain entities (`Contact` entity vs `ContactDto` wire). `Response` for the top-level API envelope (`PortfolioResponse` = `{ data, meta }`); `Dto` for the nested pieces (`PortfolioDataDto`, `ProjectDto`, `SkillDto`, …). Never bare (clashes with entities), never combined (`ResponseDto`).
-- **Path aliases:** `@/` → `src`, `@shared` → `src/shared`, `@features` → `src/features` (configured in `vite.config.ts` + `tsconfig.app.json`).
+- **Mappers:** DTO→entity mapping uses a shared base `abstract class Mapper<I, O> { abstract from(input: I): O }` (`@shared/lib/mappers`). Each feature's mapper **extends** it with an **instance** `from` (not static — static can't satisfy the abstract method or use the class generics) and exports a **singleton** (`export const portfolioMapper = new PortfolioMapper()`). Read-only features implement only `from` (no `to` — YAGNI). The `from` body maps **explicitly** (rename / null-normalize / narrow) — never spread the DTO into the entity (would leak `id`, `documentId`, `__component`).
+- **Path aliases:** `@/` → `src`, `@shared` → `src/shared`, `@features` → `src/features`, `@portfolio` → `src/features/portfolio` (configured in `vite.config.ts` + `tsconfig.app.json`).
+- **Imports — alias-first:** use a path **alias** for any cross-directory import (`@shared/...`, `@portfolio/...`, `@features/...`, `@/...`), including within a feature (`data → core` as `@portfolio/core`). Use a **relative** import only for **same-directory siblings** (`./Foo`). (Trade-off: aliases read uniformly but couple files to the feature name if it's renamed; a rename is a find-replace.)
 
 ### TypeScript / class style
 
