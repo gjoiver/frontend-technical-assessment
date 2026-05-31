@@ -148,9 +148,9 @@ frontend/
 
 ## 9. Cierre
 
-- [ ] 9.1 README del frontend (instalación, arquitectura, scripts, decisiones, AI Usage) — en inglés
-- [ ] 9.2 Actualizar el README raíz (sección frontend)
-- [ ] 9.3 Commit: `feat(frontend): portfolio SPA with clean architecture + atomic design`
+- [x] 9.1 README del frontend (instalación, arquitectura, scripts, decisiones, AI Usage) — en inglés
+- [x] 9.2 Actualizar el README raíz (sección frontend)
+- [x] 9.3 Commit: `feat(frontend): portfolio SPA with clean architecture + atomic design`
 
 ---
 
