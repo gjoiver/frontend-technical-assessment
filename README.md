@@ -1,61 +1,57 @@
-# 🚀 Getting started with Strapi
+# Personal Creative Portfolio
 
-Strapi comes with a full featured [Command Line Interface](https://docs.strapi.io/dev-docs/cli) (CLI) which lets you scaffold and manage your project in seconds.
+Front-end assessment monorepo: a personal portfolio made of a headless backend (Strapi) and a SPA (React) that consumes it.
 
-### `develop`
-
-Start your Strapi application with autoReload enabled. [Learn more](https://docs.strapi.io/dev-docs/cli#strapi-develop)
+## Structure
 
 ```
-npm run develop
-# or
-yarn develop
+.
+├── backend/    # Headless API with Strapi 5 (TypeScript, SQLite) — public read-only
+└── frontend/   # React 19 + Vite SPA consuming the API
 ```
 
-### `start`
+Each folder is an independent app with its own `package.json`, installed and run separately.
 
-Start your Strapi application with autoReload disabled. [Learn more](https://docs.strapi.io/dev-docs/cli#strapi-start)
+## Getting started
 
-```
-npm run start
-# or
-yarn start
-```
+### Backend
 
-### `build`
-
-Build your admin panel. [Learn more](https://docs.strapi.io/dev-docs/cli#strapi-build)
-
-```
-npm run build
-# or
-yarn build
+```bash
+cd backend
+cp .env.example .env   # then generate values: openssl rand -base64 16
+npm install
+npm run develop        # http://localhost:1337  (admin at /admin, API at /api/portfolio)
 ```
 
-## ⚙️ Deployment
+See [backend/README.md](backend/README.md) for details, the content model and the API surface.
 
-Strapi gives you many possible deployment options for your project including [Strapi Cloud](https://cloud.strapi.io). Browse the [deployment section of the documentation](https://docs.strapi.io/dev-docs/deployment) to find the best solution for your use case.
+### Frontend
 
+```bash
+cd frontend
+cp .env.example .env   # VITE_API_URL → the backend (default http://localhost:1337)
+npm install
+npm run dev            # http://localhost:5174
 ```
-yarn strapi deploy
-```
 
-## 📚 Learn more
+See [frontend/README.md](frontend/README.md) for the architecture, scripts and testing. The dev server is pinned to port **5174** (the backend's allowed CORS origin), so keep the backend running.
 
-- [Resource center](https://strapi.io/resource-center) - Strapi resource center.
-- [Strapi documentation](https://docs.strapi.io) - Official Strapi documentation.
-- [Strapi tutorials](https://strapi.io/tutorials) - List of tutorials made by the core team and the community.
-- [Strapi blog](https://strapi.io/blog) - Official Strapi blog containing articles made by the Strapi team and the community.
-- [Changelog](https://strapi.io/changelog) - Find out about the Strapi product updates, new features and general improvements.
+## Frontend architecture & criteria
 
-Feel free to check out the [Strapi GitHub repository](https://github.com/strapi/strapi). Your feedback and contributions are welcome!
+The SPA is built to meet the assessment criteria: **fully responsive (mobile-first)**, **clean-code and best architecture practices**, and **component structure + styling + one unit test**.
 
-## ✨ Community
+Applied practices:
 
-- [Discord](https://discord.strapi.io) - Come chat with the Strapi community including the core team.
-- [Forum](https://forum.strapi.io/) - Place to discuss, ask questions and find answers, show your Strapi project and get feedback or just talk with other Community members.
-- [Awesome Strapi](https://github.com/strapi/awesome-strapi) - A curated list of awesome things related to Strapi.
+- **Clean Architecture** in layers per feature — `core` (domain: entities, repository ports, use cases/interactors), `data` (datasources, DTOs + mappers, repository implementations), `presentation` (React: pages, atomic components, hooks).
+- **Repository + Interactor** consumption pattern: `Page → hook → <Feature>Interactor (facade) → ‹Action›UseCase → Repository (port) → RepositoryImpl → DataSource → httpClient`.
+- **Feature-based** structure (`features/portfolio`, later `features/products`), with a root **`shared/`** kernel for cross-cutting dependencies (design system, HTTP client, config, theme).
+- **Atomic Design** for the UI: atoms → molecules → organisms → templates → pages.
+- **SOLID** principles, with dependency inversion wired at a composition root (`app/`).
+- **Rules of React** (https://react.dev/reference/rules): pure, idempotent components and hooks; immutable props/state; side effects only in effects/handlers.
+- **Testing:** Vitest — the unit test covers the `PortfolioMapper` (pure DTO→entity mapping) with the **AAA** pattern, **Gherkin** (Given/When/Then) scenario names, and fixtures in `data/mocks/`.
 
----
+## Documentation
 
-<sub>🤫 Psst! [Strapi is hiring](https://strapi.io/careers).</sub>
+- Guardrails and conventions (backend + frontend): [CLAUDE.md](CLAUDE.md)
+- Backend details: [backend/README.md](backend/README.md) · roadmap: [backend/ROADMAP.md](backend/ROADMAP.md)
+- Frontend details: [frontend/README.md](frontend/README.md) · roadmap: [frontend/ROADMAP.md](frontend/ROADMAP.md)

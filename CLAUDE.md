@@ -1,0 +1,156 @@
+# CLAUDE.md
+
+Context and working guardrails for this repository. It's a **monorepo**: the Strapi 5 backend lives in `backend/`, the React SPA lives in `frontend/`. Backend conventions are below; **frontend** conventions are in their own section near the end. Keep changes aligned with the conventions below.
+
+## Project
+
+Strapi 5 headless CMS for a **Personal Creative Portfolio** (front-end technical assessment). It exposes a **read-only public REST API** that the React SPA (in `frontend/`) will consume. Runs locally; deployment is not required.
+
+## Stack (pinned)
+
+- **Strapi 5.47.0** · **SQLite** (`better-sqlite3`) · **TypeScript**
+- **Node:** 20–24 (see `backend/package.json` `engines`)
+- Note: `backend/package.json` includes `react`, `react-dom`, `react-router-dom`, `styled-components` — these are Strapi's **admin panel** deps (needed by `strapi build`), NOT the SPA's. The SPA has its own `frontend/package.json` (React 19). Do not remove them from the backend.
+
+## Structure (monorepo)
+
+```
+.                   repo root (git, README.md, CLAUDE.md)
+backend/            the Strapi app — run all backend commands from here (incl. ROADMAP.md)
+  src/
+    api/
+      portfolio/    single type — content-types/ controllers/ routes/ services/ (all .ts)
+    components/
+      portfolio/contact-info.json
+      portfolio/project.json
+      portfolio/skill.json
+      portfolio/seo.json
+      portfolio/experience.json
+    index.ts        register/bootstrap (bootstrap grants the Public `find` permission; seed still pending)
+  config/
+    middlewares.ts  strapi::cors origin set from CLIENT_URL env
+    server.ts admin.ts api.ts database.ts plugins.ts
+  .env.example      committed; .env is gitignored
+frontend/           the React SPA (not scaffolded yet)
+```
+
+## Commands (run from `backend/`)
+
+```bash
+cd backend
+npm run develop   # dev server with autoreload (http://localhost:1337)
+npm run build     # build the admin panel
+npm run start     # production-mode server
+```
+
+## Content model (as actually built)
+
+A **single `portfolio` single type** (draft & publish ON) holds everything, rather than separate Profile/Project types:
+
+- `aboutMe` — rich `blocks`
+- `contactInformation` — single `portfolio.contact-info` component: `email`, `phone`, `socialMedia` (json)
+- `projects` — **dynamic zone** of `portfolio.project` components: `title` (required), `description` (blocks), `technologies` (json)
+- `skills` — repeatable `portfolio.skill` component: `name` (required), `level` (enum: `Beginner` / `Intermediate` / `Advanced`)
+- `seo` — single `portfolio.seo` component: `metaTitle` (required), `metaDescription` (required), `keywords`
+- `experience` — repeatable `portfolio.experience` component: `title` (required), `company` (required), `duration`, `responsibilities` (blocks)
+
+## API surface (contract for the frontend that consumes this)
+
+- `GET /api/portfolio` — the single portfolio with its components and the `projects` dynamic zone.
+- **Response shape (v5, flattened):** `{ data: { id, documentId, ...fields }, meta }` — there is **no** `data.attributes` nesting (that was v4).
+- **Image URLs (if/when media is added) are relative** (`/uploads/...`) — the consumer must prefix the Strapi origin.
+
+## Current state (what's done vs. pending)
+
+- ✅ Content model + components scaffolded (single type `portfolio`, incl. `experience`).
+- ✅ Public-role `find` permission — granted in `bootstrap` (idempotent).
+- ✅ Default populate in the controller `find` (explicit list: components + `projects` dynamic zone, not `'*'`).
+- ✅ CORS origin set from `CLIENT_URL` env (default `http://localhost:5174`).
+- ⛔ Seed data on bootstrap — **deferred to optional polish** (content is loaded via the admin panel for now; see `backend/ROADMAP.md` §10).
+
+## Architecture & conventions (targets to uphold)
+
+- The public REST API must stay **read-only**. Grant the Public role only `find` on `api::portfolio.portfolio`. Never expose create/update/delete publicly.
+- Prefer overriding the controller `find` to **populate components + the dynamic zone by default**, so consumers never send deep populate queries. Use explicit populate over `populate: '*'`.
+- Configure public permissions and seed data **automatically** in `backend/src/index.ts` `bootstrap` (idempotent: only seed when empty, only add missing permissions).
+- Use the **Document Service API** (`strapi.documents(...)`) — not `entityService` (deprecated in v5).
+
+## Coding conventions
+
+- **Conventional commits:** `feat` / `fix` / `chore` / `docs` / `refactor`.
+- Keep controllers thin; prefer the default core controller + targeted overrides.
+- Document technical decisions in the README (Strapi 5, SQLite, read-only surface, single-type vs. split types, populate-in-controller).
+
+### TypeScript typing
+
+- Type the Strapi instance with `Core.Strapi` from `@strapi/strapi`. In `src/index.ts`, annotate the lifecycle hooks: `register({ strapi }: { strapi: Core.Strapi })` and `async bootstrap({ strapi }: { strapi: Core.Strapi })` (import it as `import type { Core } from '@strapi/strapi'`). Without it `strapi` is implicitly `any` and you lose autocomplete on `strapi.query` / `strapi.documents` / `strapi.log`.
+- `strapi.query(...)` and `strapi.documents(...)` return loosely-typed results; narrow or cast at the call site when you need a specific shape rather than spreading `any` through the code.
+- Prefer `import type { ... }` for type-only imports (e.g. `Core`) so they're erased from the build.
+- Generated types live in `types/generated/` — let Strapi regenerate them; do not edit by hand.
+
+## Frontend (React SPA) — architecture & conventions
+
+The SPA lives in `frontend/` (its own `package.json`). Run frontend commands from `frontend/` (`npm run dev`, `npm run build`, `npm run test`). Detailed plan in `frontend/ROADMAP.md`.
+
+### Stack
+
+- **React 19** · **Vite** · **TypeScript** · **styled-components** (v6) · **react-router-dom** (v6/v7)
+- Tests: **Vitest** + **React Testing Library** (jsdom)
+
+### Architecture (required)
+
+- **Clean Architecture in layers, per feature** — dependencies point inward:
+  - `core` → domain: entities, repository **ports** (interfaces), use cases (**interactors**). No React, no HTTP.
+  - `data` → implements core ports: datasources (HTTP), DTOs + mappers, repository implementations.
+  - `presentation` → React: pages, atomic components, hooks. Depends on `core` (entities/use cases), never on `data` directly.
+- **Repository + Interactor** consumption chain: `Page → hook → <Feature>Interactor (facade) → ‹Action›UseCase → Repository (port) → RepositoryImpl → DataSource → httpClient`. The **Interactor** is a per-feature facade (`core/interactors/<Feature>Interactor`) that exposes feature methods and delegates each to a use case; presentation consumes the interactor, not the use cases directly.
+- **Feature-based** under `src/features/` (`portfolio`, later `products`); a root **`src/shared/`** kernel holds cross-cutting deps (design system, http client, config, theme, common types).
+- **Atomic Design** for UI: atoms → molecules → organisms → templates → pages (shared generic ones in `shared/ui`, feature-specific organisms in the feature's `presentation/components`).
+- **Component layout:** every UI component is a **folder** with an `index.ts` barrel. Two shapes:
+  - **Pure styled** (e.g. `Button`, `Card`): just `Component.tsx` (the `styled.*`) + `index.ts`.
+  - **Composed** (JSX + atoms + internal styled, e.g. `SectionTitle`): `Component.tsx` (composition/logic only) + `Component.styles.ts` (private internal styled pieces) + `Component.types.ts` (props) + `index.ts`.
+    Prop-less components skip `.types.ts`. Re-export types with `export type *`. Barrel each level (`atoms/index.ts`, …).
+- **Rich text (Strapi blocks):** `aboutMe` / `description` / `responsibilities` are Strapi blocks. Render them via `@strapi/blocks-react-renderer` **wrapped in a single `RichTextRenderer`** component that accepts the domain `RichText` — the Strapi dependency stays contained to that one file (cast `value as unknown as BlocksContent` there). Note: that package ships a broken `husky` `postinstall`, so it must be installed with `npm i @strapi/blocks-react-renderer --ignore-scripts`.
+- **Dependency inversion (SOLID-D):** wire concrete deps at the composition root (`src/app/`); presentation receives the interactor already built, never instantiates `data`.
+- **Naming:** use cases are `‹Action›‹Entity›UseCase` (e.g. `GetPortfolioUseCase`), exposing `execute()`.
+- **Use case contract:** each use case `implements UseCase<S, T>` (`@shared/lib/usecases`) — a shared interface `execute(params: S): Promise<T>` (**Promise only**, no rxjs/Observable; this is React). For no-input use cases use `S = void` (`implements UseCase<void, Portfolio>`, `execute(): Promise<Portfolio>`). Within a feature's `core`, import the **sub-barrel** (`@portfolio/core/entities`) rather than the top `@portfolio/core` to avoid a self-referential barrel cycle (critical for value imports).
+- **Data-layer naming:** wire-shape types carry a suffix to disambiguate from the domain entities (`Contact` entity vs `ContactDto` wire). `Response` for the top-level API envelope (`PortfolioResponse` = `{ data, meta }`); `Dto` for the nested pieces (`PortfolioDataDto`, `ProjectDto`, `SkillDto`, …). Never bare (clashes with entities), never combined (`ResponseDto`).
+- **Mappers:** DTO→entity mapping uses a shared base `abstract class Mapper<I, O> { abstract from(input: I): O }` (`@shared/lib/mappers`). Each feature's mapper **extends** it with an **instance** `from` (not static — static can't satisfy the abstract method or use the class generics) and exports a **singleton** (`export const portfolioMapper = new PortfolioMapper()`). Read-only features implement only `from` (no `to` — YAGNI). The `from` body maps **explicitly** (rename / null-normalize / narrow) — never spread the DTO into the entity (would leak `id`, `documentId`, `__component`).
+- **Path aliases:** `@/` → `src`, `@shared` → `src/shared`, `@features` → `src/features`, `@portfolio` → `src/features/portfolio` (configured in `vite.config.ts` + `tsconfig.app.json`).
+- **Imports — alias to cross modules, relative within a level:** use a path **alias** (`@shared/...`, `@portfolio/...`, `@features/...`, `@/...`) when crossing to another module/layer/feature (`data → core` as `@portfolio/core`). Use a **relative** import for files at the **same level** — same directory or a sibling folder under the same parent (`./Foo`, `../SiblingComponent`). (Trade-off: aliases read uniformly but couple files to the feature name; a rename is a find-replace.)
+
+### TypeScript / class style
+
+- **`erasableSyntaxOnly` is on** (Vite template). Therefore **no parameter properties, no `enum`, no `namespace`** — none are erasable. Use union types and `const` objects instead of enums.
+- **Classes:** declare fields explicitly and assign in the constructor body (not via constructor-parameter shorthand). Add **explicit access modifiers** on every member: `public` for what's used outside (e.g. `error.kind`, `useCase.execute()`), `private` for injected internal deps.
+- **Env:** only `VITE_`-prefixed vars reach the client; read via `import.meta.env`, centralized in `shared/lib/config` (never `process.env`). Type them by augmenting `ImportMetaEnv` in `src/vite-env.d.ts` (which must stay inside `src/` to be included, and must keep its `/// <reference types="vite/client" />`), so `import.meta.env.VITE_*` is `string` instead of `any`.
+- **styled-components theme:** type it by augmenting `DefaultTheme` (`declare module 'styled-components'`) to extend `AppTheme` (= `typeof tokens`), so `props.theme` is fully typed. The empty `interface … extends` is the documented styled-components pattern; ESLint's `@typescript-eslint/no-empty-object-type` is configured with `allowInterfaces: 'with-single-extends'` to permit it. Tokens are the single source of truth — components read `theme.*`, never hardcoded values. Mobile-first via a `media` helper using `min-width`.
+- **CSS units:** `rem` for typography and spacing (respects the user's font-size setting / accessibility); `px` only for hairline borders (crisp 1–3px lines); breakpoints in `px`.
+- **Typography:** the `Text` atom takes a `variant` prop (`h1 | h2 | h3 | body | caption`) that maps to a semantic element **and** size/weight from tokens — write `<Text variant="h3">`, not raw `as`/`size`/`weight`. This couples semantics to style and keeps it consistent. Pass styled-only props as transient (`$variant`, `$muted`) so they don't leak to the DOM.
+- **Copy / i18n:** no hardcoded UI strings in JSX. Translatable copy (section titles, loading/error messages) lives **centralized** in `<feature>/presentation/i18n/<feature>.i18n.ts` (e.g. `portfolioI18n`) — ready to wrap in locales later. Component-specific **constants/routes** go in a co-located `<Component>.config.ts` only when they exist (hybrid).
+
+### React rules
+
+- Components and hooks must be **pure and idempotent** — no side effects during render. Treat props/state as **immutable** (never mutate). Side effects (data fetching) go in effects/handlers. Follow the Rules of Hooks. Ref: https://react.dev/reference/rules
+
+### HTTP & errors
+
+- `shared/lib/http` exposes an injected `HttpClient` interface (not raw `fetch` calls scattered around). Errors are a typed `HttpError` with `kind: 'client' | 'server' | 'network' | 'parse'` (+ optional `status`) so the UI can branch on failure type (basis for Exercise 2's 5xx/4xx/network handling).
+
+### Testing
+
+- One unit test minimum (assessment). Prefer testing pure units (a use case with a mocked repository, or a mapper) to showcase the architecture's testability.
+- **AAA + Gherkin:** group with `describe('Feature: …')`; write each scenario name as a **multi-line template string** with `Given … / When … / Then …`. Inside the body, the **only** comments allowed are the AAA markers `// Arrange`, `// Act`, `// Assert` — no other inline comments (the assertions are self-documenting).
+- **Fixtures/mocks:** reusable test data lives in `<feature>/data/mocks/` (e.g. `portfolioResponse.mock.ts`) and is imported into specs — never redefined inline in each test.
+
+## Requirements (do not forget)
+
+- Must run from a **clean clone** following only the README — `.env.example` is committed; secrets are generated with `openssl rand -base64 16`.
+- **Document AI usage** as you work (README `AI Usage` section or `docs/AI_USAGE.md`).
+
+## Do NOT
+
+- Do not expose write operations on the public API.
+- Do not use `entityService` or v4 `data.attributes` patterns — this is Strapi v5.
+- Do not commit `.env` or the `.tmp/` SQLite database.
+- Do not require manual admin-panel steps to get a working API — bootstrap should handle permissions and seed.

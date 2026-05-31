@@ -1,0 +1,24 @@
+{
+  "collectionName": "components_portfolio_experiences",
+  "info": {
+    "displayName": "Experience"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "company": {
+      "type": "string",
+      "required": true
+    },
+    "duration": {
+      "type": "string"
+    },
+    "responsibilities": {
+      "type": "blocks"
+    }
+  },
+  "config": {}
+}
