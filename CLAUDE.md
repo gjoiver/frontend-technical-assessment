@@ -139,7 +139,9 @@ The SPA lives in `frontend/` (its own `package.json`). Run frontend commands fro
 
 ### Testing
 
-- One unit test minimum (assessment). Use the **AAA** pattern (Arrange / Act / Assert) and **Gherkin**-style descriptions (`describe('Feature: …')` + `it('Scenario: given…, when…, then…')`). Prefer testing pure units (a use case with a mocked repository, or a mapper) to showcase the architecture's testability.
+- One unit test minimum (assessment). Prefer testing pure units (a use case with a mocked repository, or a mapper) to showcase the architecture's testability.
+- **AAA + Gherkin:** group with `describe('Feature: …')`; write each scenario name as a **multi-line template string** with `Given … / When … / Then …`. Inside the body, the **only** comments allowed are the AAA markers `// Arrange`, `// Act`, `// Assert` — no other inline comments (the assertions are self-documenting).
+- **Fixtures/mocks:** reusable test data lives in `<feature>/data/mocks/` (e.g. `portfolioResponse.mock.ts`) and is imported into specs — never redefined inline in each test.
 
 ## Requirements (do not forget)
 

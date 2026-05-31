@@ -139,12 +139,12 @@ frontend/
 
 ## 8. Testing (un unit test — AAA + Gherkin)
 
-- [ ] 8.1 Configurar **Vitest** + **React Testing Library** + jsdom
-- [ ] 8.2 Escribir **un** unit test con:
+- [x] 8.1 Configurar **Vitest** + **React Testing Library** + jsdom
+- [x] 8.2 Escribir **un** unit test con:
   - **AAA**: bloques Arrange / Act / Assert claros.
   - **Gherkin**: `describe('Feature: …')` + `it('Scenario: given…, when…, then…')` (o comentarios Given/When/Then).
   - Candidato recomendado: `GetPortfolioUseCase` con un `PortfolioRepository` mock (lógica pura, determinista, demuestra la testabilidad del patrón interactor). Alternativa: `portfolioMapper` o un componente con RTL.
-- [ ] **8.3 Checkpoint:** `npm run test` pasa en verde
+- [x] **8.3 Checkpoint:** `npm run test` pasa en verde
 
 ## 9. Cierre
 
