@@ -22,12 +22,13 @@ Marca cada caja con `[x]`. Las casillas en **negrita** son checkpoints de verifi
 - **Patrón Repository + Interactor** (cadena de consumo desde el front):
 
   ```
-  PortfolioPage → usePortfolio (hook) → GetPortfolioUseCase (interactor)
-                → PortfolioRepository (puerto) → PortfolioRepositoryImpl
-                → StrapiPortfolioDataSource → httpClient
+  PortfolioPage → usePortfolio (hook) → PortfolioInteractor (facade)
+                → GetPortfolioUseCase → PortfolioRepository (puerto)
+                → PortfolioRepositoryImpl → StrapiPortfolioDataSource → httpClient
   ```
 
-  - **Interactor** = el use case que la presentación consume (`GetPortfolioUseCase.execute()`). Orquesta la regla de aplicación y depende del **puerto**, no de la implementación.
+  - **Interactor** = facade **per-feature** (`PortfolioInteractor` en `core/interactors/`) que la presentación consume. Expone métodos de la feature (`getPortfolio()`) y **delega cada uno en un use case**. No conoce HTTP ni `data`.
+  - **Use case** = `‹Acción›‹Entidad›UseCase`, una unidad de lógica de aplicación que depende del **puerto**.
   - **Repository** = puerto (interfaz) en `core` + implementación en `data`. Aísla el origen de datos.
 
 - **Convención de nombres:** use cases `‹Acción›‹Entidad›UseCase` (p. ej. `GetPortfolioUseCase`).
@@ -104,7 +105,8 @@ frontend/
 
 - [x] 3.1 `entities/`: tipos de dominio (Portfolio, Project, Skill, Experience, Contact, Seo) — independientes de la forma de Strapi
 - [x] 3.2 `repositories/PortfolioRepository.ts`: interfaz (puerto) `getPortfolio(): Promise<Portfolio>`
-- [x] 3.3 `usecases/GetPortfolioUseCase.ts`: interactor con `execute(): Promise<Portfolio>`, depende del puerto (no de la implementación)
+- [x] 3.3 `usecases/GetPortfolioUseCase.ts`: use case con `execute(): Promise<Portfolio>`, depende del puerto (no de la implementación)
+- [x] 3.4 `interactors/PortfolioInteractor.ts`: facade per-feature que expone `getPortfolio()` y delega en el use case
 
 ## 4. Feature `portfolio` — capa `data`
 

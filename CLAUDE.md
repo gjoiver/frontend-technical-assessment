@@ -103,7 +103,7 @@ The SPA lives in `frontend/` (its own `package.json`). Run frontend commands fro
   - `core` → domain: entities, repository **ports** (interfaces), use cases (**interactors**). No React, no HTTP.
   - `data` → implements core ports: datasources (HTTP), DTOs + mappers, repository implementations.
   - `presentation` → React: pages, atomic components, hooks. Depends on `core` (entities/use cases), never on `data` directly.
-- **Repository + Interactor** consumption chain: `Page → hook → ‹Action›UseCase (interactor) → Repository (port) → RepositoryImpl → DataSource → httpClient`.
+- **Repository + Interactor** consumption chain: `Page → hook → <Feature>Interactor (facade) → ‹Action›UseCase → Repository (port) → RepositoryImpl → DataSource → httpClient`. The **Interactor** is a per-feature facade (`core/interactors/<Feature>Interactor`) that exposes feature methods and delegates each to a use case; presentation consumes the interactor, not the use cases directly.
 - **Feature-based** under `src/features/` (`portfolio`, later `products`); a root **`src/shared/`** kernel holds cross-cutting deps (design system, http client, config, theme, common types).
 - **Atomic Design** for UI: atoms → molecules → organisms → templates → pages (shared generic ones in `shared/ui`, feature-specific organisms in the feature's `presentation/components`).
 - **Component layout:** every UI component is a **folder** with an `index.ts` barrel. Two shapes:
