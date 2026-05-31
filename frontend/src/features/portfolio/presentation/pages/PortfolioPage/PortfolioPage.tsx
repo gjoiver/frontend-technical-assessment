@@ -1,5 +1,6 @@
 import { Spinner, Text } from "@shared/ui/atoms";
 import {
+  Header,
   AboutSection,
   ProjectList,
   SkillGrid,
@@ -33,12 +34,15 @@ export function PortfolioPage({ interactor }: PortfolioPageProps) {
   }
 
   return (
-    <Container>
-      <AboutSection aboutMe={data.aboutMe} />
-      <ProjectList projects={data.projects} />
-      <SkillGrid skills={data.skills} />
-      <ExperienceList experience={data.experience} />
-      <ContactCard contact={data.contact} />
-    </Container>
+    <>
+      <Header />
+      <Container>
+        <AboutSection aboutMe={data.aboutMe} />
+        <SkillGrid skills={data.skills} />
+        <ExperienceList experience={data.experience} />
+        <ProjectList projects={data.projects} />
+        <ContactCard contact={data.contact} />
+      </Container>
+    </>
   );
 }

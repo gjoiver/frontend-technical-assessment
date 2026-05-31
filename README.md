@@ -30,7 +30,7 @@ See [backend/README.md](backend/README.md) for details, the content model and th
 ```bash
 cd frontend
 npm install
-npm run dev            # http://localhost:5173
+npm run dev            # http://localhost:5174
 ```
 
 > Not scaffolded yet — see the work plan in [frontend/ROADMAP.md](frontend/ROADMAP.md).

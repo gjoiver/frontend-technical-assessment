@@ -46,7 +46,7 @@ API headless de solo lectura para el portafolio. Marca cada caja con `[x]`. Las 
 
 ## 7. CORS (acceso desde el navegador)
 
-- [x] 7.1 CORS en `backend/config/middlewares.ts` → `origin` desde env (default `http://localhost:5173`)
+- [x] 7.1 CORS en `backend/config/middlewares.ts` → `origin` desde env (default `http://localhost:5174`)
 
 ## 8. Reproducibilidad (clon limpio)
 

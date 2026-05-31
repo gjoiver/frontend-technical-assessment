@@ -91,7 +91,7 @@ frontend/
 - [x] 1.5 Configurar **path aliases** (`@/`, `@shared`, `@features`) en `vite.config.ts` + `tsconfig`
 - [ ] 1.6 ESLint + Prettier (clean code) — opcional si Vite no los trae ya
 - [x] 1.7 `.env` del front: `VITE_API_URL=http://localhost:1337` (+ `.env.example`)
-- [x] **1.8 Checkpoint:** `npm run dev` levanta en `http://localhost:5173`
+- [x] **1.8 Checkpoint:** `npm run dev` levanta en `http://localhost:5174`
 
 ## 2. Shared kernel
 
@@ -125,17 +125,17 @@ frontend/
 
 ## 6. Composition root (`app/`)
 
-- [ ] 6.1 Cablear dependencias (DI manual): `httpClient` → `DataSource` → `RepositoryImpl` → `GetPortfolioUseCase` → `usePortfolio`
-- [ ] 6.2 `router.tsx`: ruta `/` → `PortfolioPage`
-- [ ] 6.3 `providers/`: `ThemeProvider` + `GlobalStyle`
-- [ ] **6.4 Checkpoint:** la página muestra el contenido real traído de Strapi
+- [x] 6.1 Cablear dependencias (DI manual): `httpClient` → `DataSource` → `RepositoryImpl` → `GetPortfolioUseCase` → `usePortfolio`
+- [x] 6.2 `router.tsx`: ruta `/` → `PortfolioPage`
+- [x] 6.3 `providers/`: `ThemeProvider` + `GlobalStyle`
+- [x] **6.4 Checkpoint:** la página muestra el contenido real traído de Strapi
 
 ## 7. Responsive y styling (mobile-first)
 
-- [ ] 7.1 Layout mobile-first: estilos base = móvil; `min-width` media queries para escalar
-- [ ] 7.2 Grids responsive (skills/projects) con CSS Grid/Flex
-- [ ] 7.3 Navegación/header responsive
-- [ ] **7.4 Checkpoint:** revisar en 320px, 768px, 1024px+ sin overflow ni roturas
+- [x] 7.1 Layout mobile-first: estilos base = móvil; `min-width` media queries para escalar
+- [x] 7.2 Grids responsive (skills/projects) con CSS Grid/Flex
+- [x] 7.3 Navegación/header responsive
+- [x] **7.4 Checkpoint:** revisar en 320px, 768px, 1024px+ sin overflow ni roturas
 
 ## 8. Testing (un unit test — AAA + Gherkin)
 

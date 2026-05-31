@@ -8,7 +8,7 @@ export function SkillGrid({ skills }: SkillGridProps) {
   if (skills.length === 0) return null;
 
   return (
-    <section>
+    <section id="skills">
       <SectionTitle>{portfolioI18n.sections.skills}</SectionTitle>
       <Grid>
         {skills.map((skill) => (

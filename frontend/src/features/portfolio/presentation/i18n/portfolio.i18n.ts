@@ -1,13 +1,17 @@
 export const portfolioI18n = {
   sections: {
-    about: "About",
-    projects: "Projects",
-    skills: "Skills",
-    experience: "Experience",
-    contact: "Contact",
+    about: "Acerca de mí",
+    skills: "Habilidades",
+    experience: "Experiencia",
+    projects: "Proyectos",
+    contact: "Contactos",
   },
   states: {
-    loading: "Loading…",
-    error: "Something went wrong. Please try again.",
+    loading: "Cargando...",
+    error: "Algo salió mal, intenta de nuevo por favor",
+  },
+  actions: {
+    showMore: "Ver más...",
+    showLess: "Ver menos",
   },
 } as const;

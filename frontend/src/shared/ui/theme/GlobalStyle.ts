@@ -3,6 +3,7 @@ import { createGlobalStyle } from "styled-components";
 export const GlobalStyle = createGlobalStyle`
   *, *::before, *::after { box-sizing: border-box; }
   * { margin: 0; }
+  html { scroll-behavior: smooth; }
   html, body { height: 100%; }
   body {
     font-family: ${({ theme }) => theme.font.family};
@@ -13,4 +14,5 @@ export const GlobalStyle = createGlobalStyle`
   }
   img, picture { max-width: 100%; display: block; }
   a { color: inherit; text-decoration: none; }
+  section[id] { scroll-margin-top: 5rem; }
 `;

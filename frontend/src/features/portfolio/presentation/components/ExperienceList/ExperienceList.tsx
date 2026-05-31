@@ -1,5 +1,5 @@
 import { Text } from "@shared/ui/atoms";
-import { Card, SectionTitle } from "@shared/ui/molecules";
+import { Card, Expandable, SectionTitle } from "@shared/ui/molecules";
 import { portfolioI18n } from "@portfolio/presentation/i18n";
 import { RichTextRenderer } from "../RichTextRenderer";
 import { List, Meta } from "./ExperienceList.styles";
@@ -9,7 +9,7 @@ export function ExperienceList({ experience }: ExperienceListProps) {
   if (experience.length === 0) return null;
 
   return (
-    <section>
+    <section id="experience">
       <SectionTitle>{portfolioI18n.sections.experience}</SectionTitle>
       <List>
         {experience.map((item) => (
@@ -24,7 +24,12 @@ export function ExperienceList({ experience }: ExperienceListProps) {
               )}
             </Meta>
             {item.responsibilities && (
-              <RichTextRenderer value={item.responsibilities} />
+              <Expandable
+                moreLabel={portfolioI18n.actions.showMore}
+                lessLabel={portfolioI18n.actions.showLess}
+              >
+                <RichTextRenderer value={item.responsibilities} />
+              </Expandable>
             )}
           </Card>
         ))}

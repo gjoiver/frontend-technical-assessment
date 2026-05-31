@@ -65,7 +65,7 @@ A **single `portfolio` single type** (draft & publish ON) holds everything, rath
 - ✅ Content model + components scaffolded (single type `portfolio`, incl. `experience`).
 - ✅ Public-role `find` permission — granted in `bootstrap` (idempotent).
 - ✅ Default populate in the controller `find` (explicit list: components + `projects` dynamic zone, not `'*'`).
-- ✅ CORS origin set from `CLIENT_URL` env (default `http://localhost:5173`).
+- ✅ CORS origin set from `CLIENT_URL` env (default `http://localhost:5174`).
 - ⛔ Seed data on bootstrap — **deferred to optional polish** (content is loaded via the admin panel for now; see `backend/ROADMAP.md` §10).
 
 ## Architecture & conventions (targets to uphold)
@@ -109,7 +109,7 @@ The SPA lives in `frontend/` (its own `package.json`). Run frontend commands fro
 - **Component layout:** every UI component is a **folder** with an `index.ts` barrel. Two shapes:
   - **Pure styled** (e.g. `Button`, `Card`): just `Component.tsx` (the `styled.*`) + `index.ts`.
   - **Composed** (JSX + atoms + internal styled, e.g. `SectionTitle`): `Component.tsx` (composition/logic only) + `Component.styles.ts` (private internal styled pieces) + `Component.types.ts` (props) + `index.ts`.
-  Prop-less components skip `.types.ts`. Re-export types with `export type *`. Barrel each level (`atoms/index.ts`, …).
+    Prop-less components skip `.types.ts`. Re-export types with `export type *`. Barrel each level (`atoms/index.ts`, …).
 - **Rich text (Strapi blocks):** `aboutMe` / `description` / `responsibilities` are Strapi blocks. Render them via `@strapi/blocks-react-renderer` **wrapped in a single `RichTextRenderer`** component that accepts the domain `RichText` — the Strapi dependency stays contained to that one file (cast `value as unknown as BlocksContent` there). Note: that package ships a broken `husky` `postinstall`, so it must be installed with `npm i @strapi/blocks-react-renderer --ignore-scripts`.
 - **Dependency inversion (SOLID-D):** wire concrete deps at the composition root (`src/app/`); presentation receives the interactor already built, never instantiates `data`.
 - **Naming:** use cases are `‹Action›‹Entity›UseCase` (e.g. `GetPortfolioUseCase`), exposing `execute()`.

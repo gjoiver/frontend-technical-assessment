@@ -7,7 +7,7 @@ export function AboutSection({ aboutMe }: AboutSectionProps) {
   if (!aboutMe) return null;
 
   return (
-    <section>
+    <section id="about">
       <SectionTitle>{portfolioI18n.sections.about}</SectionTitle>
       <RichTextRenderer value={aboutMe} />
     </section>
