@@ -117,7 +117,7 @@ frontend/
 
 ## 5. Feature `portfolio` — capa `presentation`
 
-- [ ] 5.1 `hooks/usePortfolio.ts`: ejecuta `GetPortfolioUseCase`, expone `{ data, loading, error }` (fetch en efecto; hook **puro**, sin mutaciones)
+- [x] 5.1 `hooks/usePortfolio.ts`: ejecuta `GetPortfolioUseCase`, expone `{ data, loading, error }` (fetch en efecto; hook **puro**, sin mutaciones)
 - [ ] 5.2 Organisms por sección (atomic): `AboutSection`, `ProjectList`, `SkillGrid`, `ExperienceList`, `ContactCard`
 - [ ] 5.3 `pages/PortfolioPage.tsx`: compone las secciones (template) + estados loading/error
 - [ ] 5.4 Render de campos _blocks_ de Strapi (`aboutMe`, `description`, `responsibilities`) — helper de render
