@@ -204,8 +204,8 @@ frontend/
 
 ## E2.7 Testing (branching de errores)
 
-- [ ] E2.7.1 Test: dado un `HttpError` de cada `type` (`server` / `client` / `network` / `parse`), el mapeo `type → mensaje` devuelve el texto correcto — **AAA + Gherkin**, fixtures en `data/mocks`
-- [ ] **E2.7.2 Checkpoint:** `npm run test` en verde
+- [x] E2.7.1 Test: dado un `HttpError` de cada `type` (`server` / `client` / `network` / `parse`), el mapeo `type → mensaje` devuelve el texto correcto — **AAA + Gherkin**, fixtures en `data/mocks`
+- [x] **E2.7.2 Checkpoint:** `npm run test` en verde
 
 ## E2.8 Cierre
 
