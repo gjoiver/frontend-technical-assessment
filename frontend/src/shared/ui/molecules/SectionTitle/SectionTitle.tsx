@@ -5,9 +5,7 @@ import type { SectionTitleProps } from "./SectionTitle.types";
 export function SectionTitle({ children }: SectionTitleProps) {
   return (
     <Wrapper>
-      <Text as="h2" size="xl" weight="bold">
-        {children}
-      </Text>
+      <Text variant="h2">{children}</Text>
       <Accent />
     </Wrapper>
   );

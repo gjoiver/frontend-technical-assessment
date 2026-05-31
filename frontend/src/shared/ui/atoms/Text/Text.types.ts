@@ -1,8 +1,10 @@
-export type TextSize = "sm" | "md" | "lg" | "xl";
-export type TextWeight = "regular" | "medium" | "bold";
+import type { ReactNode } from "react";
+
+export type TextVariant = "h1" | "h2" | "h3" | "body" | "caption";
 
 export interface TextProps {
-  size?: TextSize;
-  weight?: TextWeight;
+  variant?: TextVariant;
   muted?: boolean;
+  children?: ReactNode;
+  className?: string;
 }
