@@ -209,7 +209,7 @@ frontend/
 
 ## E2.8 Cierre
 
-- [ ] E2.8.1 README frontend: feature `products` + **AI Usage** del Ej. 2 (open loops / happy / edge / errors)
-- [ ] E2.8.2 Commit
+- [x] E2.8.1 README frontend: feature `products` + **AI Usage** del Ej. 2 (open loops / happy / edge / errors)
+- [x] E2.8.2 Commit
 
 **Transversal:** conventional commits y anotar el uso de IA mientras avanzas.
