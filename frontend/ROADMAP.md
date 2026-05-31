@@ -119,9 +119,9 @@ frontend/
 
 - [x] 5.1 `hooks/usePortfolio.ts`: ejecuta `GetPortfolioUseCase`, expone `{ data, loading, error }` (fetch en efecto; hook **puro**, sin mutaciones)
 - [x]5.2 Organisms por sección (atomic): `AboutSection`, `ProjectList`, `SkillGrid`, `ExperienceList`, `ContactCard`
-- [ ] 5.3 `pages/PortfolioPage.tsx`: compone las secciones (template) + estados loading/error
+- [x] 5.3 `pages/PortfolioPage.tsx`: compone las secciones (template) + estados loading/error
 - [x]5.4 Render de campos _blocks_ de Strapi (`aboutMe`, `description`, `responsibilities`) — helper de render
-- [ ] **5.5 Checkpoint Rules of React:** componentes/hooks puros e idempotentes, sin mutar props/state, efectos solo para sincronizar (https://react.dev/reference/rules)
+- [x] **5.5 Checkpoint Rules of React:** componentes/hooks puros e idempotentes, sin mutar props/state, efectos solo para sincronizar (https://react.dev/reference/rules)
 
 ## 6. Composition root (`app/`)
 
