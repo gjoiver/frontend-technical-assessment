@@ -17,7 +17,7 @@ export function Header() {
         >
           {open ? <FiX /> : <FiMenu />}
         </Toggle>
-        <Nav $open={open}>
+        <Nav $open={open} aria-label="Secciones">
           {Object.entries(portfolioI18n.sections).map(([id, label]) => (
             <NavLink key={id} href={`#${id}`} onClick={() => setOpen(false)}>
               {label}

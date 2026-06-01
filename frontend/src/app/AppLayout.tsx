@@ -6,7 +6,7 @@ export function AppLayout() {
   return (
     <>
       <Bar>
-        <Nav>
+        <Nav aria-label="Principal">
           {navItems.map(({ to, label, end }) => (
             <Item key={to} to={to} end={end}>
               {label}
