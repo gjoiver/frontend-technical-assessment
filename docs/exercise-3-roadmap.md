@@ -94,10 +94,10 @@ Cada sub-decisión se resuelve socráticamente.
 - ¿Hay remotes **no confiables** (terceros)? ¿los aíslas en iframe (frontera real)?
 - ¿Cómo verificas la **integridad del `remoteEntry`** (supply chain)?
 
-- [ ] 5.1 Trust model + aislamiento (CSP/Trusted Types; iframe para no confiables)
-- [ ] 5.2 Auth/sesión (dónde vive el token, refresh, propagación scoped)
-- [ ] 5.3 Supply chain (integridad/pinning, SCA/SBOM/firma)
-- [ ] **5.4 ADR-008: modelo de seguridad**
+- [x] 5.1 Trust model + aislamiento → CSP (header) + Trusted Types; **iframe para no confiables**
+- [x] 5.2 Auth/sesión → **BFF + cookie httpOnly** (token server-side) + CSRF; in-memory como alternativa
+- [x] 5.3 Supply chain → integridad `remoteEntry` + pinning; SCA/SBOM/secret scan; artefactos firmados
+- [x] **5.4 ADR-008: modelo de seguridad**
 
 ## Fase 6 — Resiliencia y observabilidad
 

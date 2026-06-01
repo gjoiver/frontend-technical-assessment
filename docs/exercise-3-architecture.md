@@ -216,5 +216,70 @@ deploys.
 
 ---
 
+## Phase 5 — Security & trust model
+
+**The defining risk.** Module Federation runs all remotes in **one origin / JS realm** — there is
+no hard sandbox, so any remote can read the DOM, globals, and other MFEs' in-memory state. A
+single XSS or one compromised remote therefore has an **app-wide blast radius**. Every control
+below exists to contain that — **defense in depth**.
+
+### 5.1 Trust model & isolation
+
+- **First-party remotes** (own teams): trusted, but contained by **CSP + Trusted Types** (CSP via
+  HTTP **header** — `frame-ancestors`/`report-to` are ignored in a `<meta>` tag) and scoped styling.
+- **Untrusted / third-party remotes**: isolated in an **iframe** (a real realm boundary) — trading
+  integration smoothness for a hard security boundary.
+
+### 5.2 Auth & session — BFF + httpOnly cookie
+
+The **shell owns auth via a Backend-for-Frontend (BFF)**:
+
+- The BFF performs the OIDC flow and **stores tokens server-side**; the browser receives only an
+  **httpOnly + Secure + SameSite cookie** — **unreadable by JS, so XSS cannot steal it** (the
+  reason it is preferred over an in-memory token).
+- The BFF handles **refresh** and **proxies API calls**, attaching the real access token
+  server-side; MFEs never see raw credentials and receive a **scoped** session via shell context.
+- **CSRF protection** is now required (cookies are sent automatically): `SameSite` + an anti-CSRF
+  (double-submit) token on state-changing requests.
+- **Topology:** a platform **auth-BFF** issues/refreshes the session cookie (login), while each
+  domain MFE has its **own BFF/gateway** that validates the session and proxies its domain APIs —
+  preserving the per-domain autonomy from ADR-001.
+- **Client side (shared, not per-MFE):** with httpOnly cookies the browser sends the session
+  automatically, so the HTTP client no longer attaches a token — it only carries
+  `credentials: 'include'`, the **anti-CSRF header**, the **correlation-id**, and
+  **401 → shell re-auth**. That cross-cutting client lives **once** in the **shared kernel** as a
+  singleton, **configured per MFE with its own BFF base URL** — never reimplemented per MFE. (The
+  per-domain BFF is a *server-side* boundary; the client-side interceptor logic stays shared, for
+  consistency.)
+- *(An in-memory access token + silent refresh hardened by CSP is the lighter alternative when a
+  BFF isn't warranted.)*
+
+### 5.3 Supply chain
+
+- **Pin** exact remote versions and verify **`remoteEntry` integrity** (SRI-style) so a tampered
+  bundle can't load.
+- CI: **SCA/dependency scanning, SBOM, secret scanning**, and **signed, immutable artifacts**;
+  automated, reviewed dependency updates.
+
+### 5.4 Transport & monitoring
+
+HTTPS everywhere; strict **CSP (header)**, `Strict-Transport-Security`, `X-Content-Type-Options`,
+tight CORS; **CSP violation reporting** (`report-to`) + per-MFE RUM/error tracking to detect
+injection or a misbehaving remote early.
+
+> **ADR-008 — Security & trust model**
+> - **Context:** shared origin/realm → app-wide blast radius; mixed-trust remotes; supply-chain
+>   exposure.
+> - **Decision:** defense in depth — CSP (header) + Trusted Types; **iframe isolation for untrusted
+>   remotes**; **shell-owned auth via a BFF with an httpOnly+Secure+SameSite cookie** (tokens stay
+>   server-side; XSS can't read them) + **CSRF protection** + a **shared HTTP-client singleton**
+>   (credentials/CSRF/correlation-id/401→shell, configured per MFE with its BFF); `remoteEntry`
+>   integrity + version pinning; CI security scans + signed artifacts; CSP-violation + RUM
+>   monitoring.
+> - **Consequences:** strongest XSS posture (token unreadable by JS) and contained supply-chain
+>   risk; **adds a BFF tier** (infra/ops + CSRF handling), accepted for the security gain.
+
+---
+
 > **Status:** built incrementally via [exercise-3-roadmap.md](exercise-3-roadmap.md). **Next:**
-> Phase 5 — security & trust model → ADR-008.
+> Phase 6 — resilience & observability → ADR-009.
