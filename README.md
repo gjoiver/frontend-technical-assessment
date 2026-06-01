@@ -18,42 +18,47 @@ AI-assisted refactor).
 > Quality criteria (responsive / mobile-first, clean-code, clean architecture) are detailed in
 > [frontend/README.md](frontend/README.md).
 
-## Highlights
+## Technical highlights
 
-> A take-home built like production: **clean architecture end-to-end**, a **hand-crafted design
-> system**, **real-world error handling**, and architecture decisions **argued and recorded** —
-> not just "make it work".
+The standout pieces across the whole project — each links to where it lives.
 
-**Exercise 1 · Portfolio — a polished product, not a demo.**
+**Architecture & data**
 
-- A **hand-built design system** — design tokens as the single source of truth, dark theme +
-  signature gradient, documented in [BRAND.md](BRAND.md) — powers a **lively, accessible** UI:
-  animated hero, scroll-reveal, skill meters, real tech logos, **tap-to-call & copy** contact,
-  experience timeline, a scroll-progress header — all **responsive** and **reduced-motion-aware** (WCAG AA).
-- **Clean Architecture** per feature (`core`/`data`/`presentation`) with **Repository · Interactor · DI**,
-  on a reusable **`shared/` kernel** (atoms, molecules, hooks, a typed HTTP client).
-- The backend **seeds itself on first boot** — a fresh clone shows real content with **zero admin clicks**.
+- **Clean Architecture** per feature (`core` / `data` / `presentation`) with **Repository · Interactor · DI** wired at a composition root ([`app/di`](frontend/src/app/di)).
+- **DTO→entity mappers** (a shared `Mapper` base) keeping the API's wire shape out of the UI.
 
-**Exercise 2 · Products — error handling done properly.**
+**HTTP & error handling**
 
-- Failures are classified at the source — **network / 4xx / 5xx / malformed JSON** — into a typed
-  `HttpError` and turned into **friendly, localized messages** (the edge cases most take-homes skip).
-  External API + CMS copy load in **one use case**, with **pagination that adapts to the data**.
+- **Typed `HttpError` with four failure classes** — `network` / `server` / `client` / `parse` — classified once in the injected [`HttpClient`](frontend/src/shared/lib/http) and branched into localized copy by [`resolveProductsError`](frontend/src/features/products/presentation/i18n).
+- **Two independent `HttpClient`s**, one per origin (Strapi + Fake Store), composed at the root.
 
-**Exercise 3 · Microfrontends + DevOps — reasoning you can audit.**
+**Design system & UI**
 
-- Designed **decision-by-decision** and recorded as **ADRs** with **Mermaid diagrams**: a Module
-  Federation shell, **BFF + httpOnly** security, observability — and a full **CI/CD pipeline that
-  includes an AI code-review stage** — plus an honest **"when _not_ to use microfrontends".**
+- **Typed design tokens** as the single source of truth ([`shared/ui/theme`](frontend/src/shared/ui/theme)), governed by the brand manual ([BRAND.md](BRAND.md)); **Atomic Design** + styled-components.
+- **Motion system honoring `prefers-reduced-motion`** everywhere (animated hero, scroll-reveal, skill meters, micro-interactions).
+- **Reusable `shared/` kernel** — `Skeleton`, `Reveal`, `TechIcon`, `Pagination` (dynamic), `EmptyState`, `ErrorState`, `useClipboard`, `useScrollSpy`, `useReveal` …
+- **Strapi blocks dependency isolated to a single [`RichTextRenderer`](frontend/src/shared/ui/molecules/RichTextRenderer)** — nothing else imports the CMS renderer.
+- **SEO via React 19 native metadata** (no library) · **skeleton & empty states** · **actionable contact** (`tel:` / `mailto:` / copy) · **WCAG AA** accessibility.
+- **Centralized i18n per feature** — no hardcoded UI strings.
 
-**Exercise 4 · AI refactoring — production-ready, and runnable.**
+**Backend**
 
-- A throwaway `fetch` snippet rebuilt into **typed, resilient TypeScript** (validation, real error
-  handling, `cause` chaining) — **runnable from the repo** (`npm start`), prompts included.
+- **Idempotent `seed` on bootstrap** ([`src/seed`](backend/src/seed), `portfolio` + `page`) — a clean clone serves real content with **no admin step**.
+- Read-only public API: **auto-granted `find` permissions** + **controller-level populate** (explicit, not `'*'`) · v5 **Document Service API** · env-locked CORS.
+- **Dependency-audit risk reviewed and documented** ([SECURITY.md](backend/SECURITY.md)).
 
-**Across everything** — **6 test suites / 22 tests** (more than the one required, targeting
-hard-to-reproduce error paths) · conventional commits · strict TypeScript · a documented
-**dependency-audit risk** ([backend/SECURITY.md](backend/SECURITY.md)).
+**Testing**
+
+- **6 suites / 22 tests** though only **one** was required — **AAA + Gherkin**, fixtures in `data/mocks/`, RTL hook + component tests — targeting the hard-to-reproduce error paths (HTTP classification, propagation, branching). Rationale in [frontend/README.md](frontend/README.md).
+
+**Exercises 3 & 4**
+
+- **Architecture reasoning** built **decision-by-decision** as **ADRs** with **Mermaid diagrams**: Module Federation shell, **BFF + httpOnly** security, observability, a **CI/CD pipeline with an AI code-review stage**, and an honest "when *not* to use microfrontends" → [exercise-3](microfrontend-architecture-reasoning/exercise-3-architecture.md).
+- **AI refactoring**: a throwaway `fetch` snippet rebuilt into **production-ready TypeScript** (typed, real error handling, `cause` chaining), **runnable** (`npm start`) → [exercise-4](ai-assisted-refactoring/README.md).
+
+Throughout: **conventional commits**, **strict TypeScript** (`erasableSyntaxOnly`), per-app roadmaps, and shared conventions in [CLAUDE.md](CLAUDE.md).
+
+Conventional commits and strict TypeScript (`erasableSyntaxOnly`) throughout.
 
 ## Run it
 

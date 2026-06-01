@@ -1,10 +1,17 @@
 # CLAUDE.md
 
-Context and working guardrails for this repository. It's a **monorepo**: the Strapi 5 backend lives in `backend/`, the React SPA lives in `frontend/`. Backend conventions are below; **frontend** conventions are in their own section near the end. Keep changes aligned with the conventions below.
+Context and working guardrails for this repository. It's a **monorepo** delivering a **four-exercise front-end assessment**: the Strapi 5 backend lives in `backend/`, the React SPA in `frontend/`, and two **standalone written/code deliverables** live in `microfrontend-architecture-reasoning/` (Exercise 3) and `ai-assisted-refactoring/` (Exercise 4). Backend conventions are below; **frontend** conventions are in their own section near the end. Keep changes aligned with the conventions below.
 
 ## Project
 
-Strapi 5 headless CMS for a **Personal Creative Portfolio** (front-end technical assessment). It exposes a **read-only public REST API** that the React SPA (in `frontend/`) will consume. Runs locally; deployment is not required.
+Strapi 5 headless CMS for a **Personal Creative Portfolio** (front-end technical assessment). It exposes a **read-only public REST API** that the React SPA (in `frontend/`) consumes. Runs locally; deployment is not required.
+
+The assessment has **four exercises**:
+
+- **1 — Portfolio:** this Strapi CMS + the SPA's `portfolio` feature (responsive, one+ tests).
+- **2 — Products:** the SPA's `products` feature consuming `fakestoreapi` + a Strapi `page` single type for the copy, with class-based error handling.
+- **3 — Architecture reasoning:** microfrontends + DevOps, written decision-by-decision (ADRs + Mermaid) in `microfrontend-architecture-reasoning/`.
+- **4 — AI-assisted refactoring:** a standalone `getUser` refactor (its own `package.json`, runnable) in `ai-assisted-refactoring/`.
 
 ## Stack (pinned)
 
@@ -15,23 +22,25 @@ Strapi 5 headless CMS for a **Personal Creative Portfolio** (front-end technical
 ## Structure (monorepo)
 
 ```
-.                   repo root (git, README.md, CLAUDE.md)
-backend/            the Strapi app — run all backend commands from here (incl. ROADMAP.md)
+.                   repo root (git, README.md, CLAUDE.md, BRAND.md)
+backend/            the Strapi app — run all backend commands from here (incl. ROADMAP.md, SECURITY.md)
   src/
     api/
-      portfolio/    single type — content-types/ controllers/ routes/ services/ (all .ts)
+      portfolio/    single type (Ex1) — content-types/ controllers/ routes/ services/ (all .ts)
+      page/         single type (Ex2) — title + intro copy for the products page
     components/
-      portfolio/contact-info.json
-      portfolio/project.json
-      portfolio/skill.json
-      portfolio/seo.json
-      portfolio/experience.json
-    index.ts        register/bootstrap (bootstrap grants the Public `find` permission; seed still pending)
+      portfolio/contact-info.json · project.json · skill.json · seo.json · experience.json
+    seed/           idempotent seed (portfolio + page), created & published on first boot
+    index.ts        register/bootstrap (grants Public `find` on portfolio + page, then runs the seed)
   config/
     middlewares.ts  strapi::cors origin set from CLIENT_URL env
     server.ts admin.ts api.ts database.ts plugins.ts
+  types/generated/  Strapi-generated types — gitignored (regenerated on develop/build)
   .env.example      committed; .env is gitignored
-frontend/           the React SPA (not scaffolded yet)
+frontend/           the React 19 + Vite SPA (built) — features/ (portfolio, products) + shared/ kernel
+microfrontend-architecture-reasoning/   Exercise 3 — architecture doc + roadmap (ADRs, Mermaid diagrams)
+ai-assisted-refactoring/                 Exercise 4 — getUser refactor (own package.json, `npm start`)
+design/                                  UX redesign proposal (spec for the SPA polish)
 ```
 
 ## Commands (run from `backend/`)
@@ -62,11 +71,12 @@ A **single `portfolio` single type** (draft & publish ON) holds everything, rath
 
 ## Current state (what's done vs. pending)
 
-- ✅ Content model + components scaffolded (single type `portfolio`, incl. `experience`).
-- ✅ Public-role `find` permission — granted in `bootstrap` (idempotent).
+- ✅ Content model + components for both single types (`portfolio` incl. `experience`, and `page` for Ex2).
+- ✅ Public-role `find` permission for `portfolio` + `page` — granted in `bootstrap` (idempotent).
 - ✅ Default populate in the controller `find` (explicit list: components + `projects` dynamic zone, not `'*'`).
 - ✅ CORS origin set from `CLIENT_URL` env (default `http://localhost:5174`).
-- ⛔ Seed data on bootstrap — **deferred to optional polish** (content is loaded via the admin panel for now; see `backend/ROADMAP.md` §10).
+- ✅ **Idempotent seed on bootstrap** (`src/seed/`) — creates & publishes `portfolio` + `page` on first boot, so a clean clone serves real content with no manual admin step.
+- ✅ Frontend SPA fully built (`portfolio` + `products` features, shared design-system kernel); Exercises 3 & 4 delivered in their own top-level folders.
 
 ## Architecture & conventions (targets to uphold)
 
