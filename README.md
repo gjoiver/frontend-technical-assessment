@@ -52,7 +52,7 @@ Applied practices:
 
 ## Documentation
 
-- **Exercise 3 — microfrontend & DevOps architecture reasoning:** [docs/exercise-3-architecture.md](docs/exercise-3-architecture.md)
+- **Exercise 3 — microfrontend & DevOps architecture reasoning:** [docs/exercise-3-architecture.md](docs/exercise-3-architecture.md) (built decision-by-decision via [docs/exercise-3-roadmap.md](docs/exercise-3-roadmap.md))
 - Guardrails and conventions (backend + frontend): [CLAUDE.md](CLAUDE.md)
 - Backend details: [backend/README.md](backend/README.md) · roadmap: [backend/ROADMAP.md](backend/ROADMAP.md)
 - Frontend details: [frontend/README.md](frontend/README.md) · roadmap: [frontend/ROADMAP.md](frontend/ROADMAP.md)
