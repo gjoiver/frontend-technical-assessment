@@ -1,4 +1,4 @@
-# Personal Creative Portfolio — Front-End Assessment
+# Front-End Assessment
 
 A monorepo solving a front-end technical assessment: a **Strapi** headless backend and a
 **React 19** SPA that consumes it, plus two written exercises (architecture reasoning and an
@@ -6,14 +6,14 @@ AI-assisted refactor).
 
 ## What the assessment asked, and where it's solved
 
-| # | Requirement | Where it's delivered |
-|---|---|---|
-| **1** | **Portfolio** — read-only backend API + **responsive** SPA + **one unit test** | [`backend/`](backend) (Strapi, read-only) + [`frontend/`](frontend) (`portfolio` feature); Vitest tests |
-| **2** | **Products** — consume `fakestoreapi`, a fetch service, **detailed error handling (5xx / 4xx / network)**, a list page using Strapi for the page copy | [`frontend/`](frontend) `products` feature — typed `HttpError` + per-type messages, tested |
-| **3** | **Architecture reasoning** — scalable front-end with **microfrontends + DevOps** | [`microfrontend-architecture-reasoning/`](microfrontend-architecture-reasoning/exercise-3-architecture.md) |
-| **4** | **AI-assisted refactoring** — clean, production-ready code + prompts + final version | [`ai-assisted-refactoring/`](ai-assisted-refactoring/README.md) |
-| ✓ | **Document AI usage** | "AI Usage" sections in each README + prompt transcripts in the exercise docs |
-| ✓ | **Runs from a clean clone** | backend **seeds content automatically** on first boot; `.env.example` committed |
+| #     | Requirement                                                                                                                                           | Where it's delivered                                                                                       |
+| ----- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| **1** | **Portfolio** — read-only backend API + **responsive** SPA + **one unit test**                                                                        | [`backend/`](backend) (Strapi, read-only) + [`frontend/`](frontend) (`portfolio` feature); Vitest tests    |
+| **2** | **Products** — consume `fakestoreapi`, a fetch service, **detailed error handling (5xx / 4xx / network)**, a list page using Strapi for the page copy | [`frontend/`](frontend) `products` feature — typed `HttpError` + per-type messages, tested                 |
+| **3** | **Architecture reasoning** — scalable front-end with **microfrontends + DevOps**                                                                      | [`microfrontend-architecture-reasoning/`](microfrontend-architecture-reasoning/exercise-3-architecture.md) |
+| **4** | **AI-assisted refactoring** — clean, production-ready code + prompts + final version                                                                  | [`ai-assisted-refactoring/`](ai-assisted-refactoring/README.md)                                            |
+| ✓     | **Document AI usage**                                                                                                                                 | "AI Usage" sections in each README + prompt transcripts in the exercise docs                               |
+| ✓     | **Runs from a clean clone**                                                                                                                           | backend **seeds content automatically** on first boot; `.env.example` committed                            |
 
 > Quality criteria (responsive / mobile-first, clean-code, clean architecture) are detailed in
 > [frontend/README.md](frontend/README.md).
@@ -37,7 +37,7 @@ AI-assisted refactor).
 
 - Built **decision-by-decision** (Socratic) and recorded as **ADRs**, with **Mermaid diagrams** (topology + pipeline).
 - Module Federation (runtime) + a client-side app shell; security via **BFF + httpOnly**, CSP/Trusted Types and trust-based isolation; resilience (bulkheads) + OpenTelemetry observability.
-- A **CI/CD pipeline** with quality & security gates — **including an AI code-review stage** that reviews each PR against the project's own conventions — plus an honest "when *not* to use microfrontends".
+- A **CI/CD pipeline** with quality & security gates — **including an AI code-review stage** that reviews each PR against the project's own conventions — plus an honest "when _not_ to use microfrontends".
 
 **Exercise 4 — AI-assisted refactoring**
 
