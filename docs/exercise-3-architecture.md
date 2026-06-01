@@ -374,5 +374,42 @@ Ephemeral preview per PR; **canary / blue-green** rollout to `main`; **feature f
 
 ---
 
+## Phase 8 — Performance & scaling
+
+### 8.1 Module Federation runtime cost & mitigation
+
+Module Federation adds orchestration overhead and a risk of **duplicate dependencies**. Mitigated
+by **shared singletons** (one React, router, design system — the biggest lever) and **lazy,
+route-based loading** of remotes + **prefetch** of the next likely remote on idle/hover →
+perceived-instant navigation.
+
+### 8.2 Caching & CDN
+
+**Content-hashed** immutable assets with long-lived caching, served from a **CDN**; only the small
+`remoteEntry`/manifest is revalidated → near-instant repeat loads.
+
+### 8.3 Budgets (CI-enforced — fail the build)
+
+Initial JS per remote (e.g. < ~150 KB gz), **Core Web Vitals** (LCP/INP/CLS), and TTFB — measured,
+not assumed.
+
+### 8.4 Scaling triggers
+
+- **mono → poly:** start in a **monorepo** (affected-only CI); split a remote to its own repo when
+  a team needs full lifecycle independence or the monorepo becomes a bottleneck.
+- **CSR → SSR:** selective SSR for an MFE that needs SEO or breaches its LCP/TTFB budget (ADR-003).
+
+> **ADR-011 — Performance & scaling**
+> - **Context:** Module Federation adds runtime cost; the system must hold performance and grow
+>   without rewrites.
+> - **Decision:** **shared singletons** + **lazy/prefetch per route**; **content-hashed assets +
+>   CDN + immutable caching**; **CI-enforced budgets** (JS per remote, CWV, TTFB) that block;
+>   explicit **scaling triggers** — mono→poly (lifecycle independence) and CSR→SSR (SEO or budget
+>   breach).
+> - **Consequences:** performance governed by measurable budgets; scales by adding MFEs and teams
+>   without rewrite; in exchange, budget discipline and monorepo tooling to maintain.
+
+---
+
 > **Status:** built incrementally via [exercise-3-roadmap.md](exercise-3-roadmap.md). **Next:**
-> Phase 8 — performance & scaling → ADR-011.
+> Phase 9 — governance & validation → ADR-012.

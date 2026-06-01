@@ -133,10 +133,10 @@ Cada sub-decisión se resuelve socráticamente.
 - ¿Qué **budgets** pones y **dónde los haces fallar** (CI)?
 - ¿Cuál es el **trigger** para pasar de mono→poly y de CSR→SSR?
 
-- [ ] 8.1 Singletons + lazy/prefetch + budgets
-- [ ] 8.2 Caching/CDN
-- [ ] 8.3 Triggers de escalado (mono→poly, CSR→SSR)
-- [ ] **8.4 ADR-011: performance y escalado**
+- [x] 8.1 Singletons + lazy/prefetch + budgets
+- [x] 8.2 Caching/CDN (assets con hash, inmutables)
+- [x] 8.3 Triggers de escalado (mono→poly, CSR→SSR)
+- [x] **8.4 ADR-011: performance y escalado**
 
 ## Fase 9 — Gobierno y validación
 
