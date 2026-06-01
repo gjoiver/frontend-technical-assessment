@@ -20,33 +20,40 @@ AI-assisted refactor).
 
 ## Highlights
 
-**Exercise 1 — Portfolio**
+> A take-home built like production: **clean architecture end-to-end**, a **hand-crafted design
+> system**, **real-world error handling**, and architecture decisions **argued and recorded** —
+> not just "make it work".
 
-- **Backend:** read-only Strapi 5 API with **idempotent self-seeding on bootstrap** (a clean clone serves real content with **no admin step**), controller-level populate (stable contract), v5 Document Service, env-locked CORS.
-- **Frontend architecture:** Clean Architecture per feature (`core` / `data` / `presentation`) + **Repository + Interactor** + DI at a composition root; DTO→entity mappers; a reusable **`shared/` design-system kernel** (atoms, molecules, hooks, injected `HttpClient`).
-- **Own design system:** **design tokens** as the single source of truth, dark theme + violet→indigo gradient, Atomic Design — governed by the **brand manual** ([BRAND.md](BRAND.md)).
-- **Visual craft:** animated hero (aurora + shimmer + CTAs), scroll-reveal, skill-level meters, tech brand icons, **actionable contact** (tap-to-call / `mailto:` / copy), experience timeline, sticky header with **scroll-progress + active-section** highlight, skeletons & empty states, **SEO** via React 19 metadata — all **responsive (mobile-first)**, **WCAG AA**, `prefers-reduced-motion`-aware.
+**Exercise 1 · Portfolio — a polished product, not a demo.**
 
-**Exercise 2 — Products**
+- A **hand-built design system** — design tokens as the single source of truth, dark theme +
+  signature gradient, documented in [BRAND.md](BRAND.md) — powers a **lively, accessible** UI:
+  animated hero, scroll-reveal, skill meters, real tech logos, **tap-to-call & copy** contact,
+  experience timeline, a scroll-progress header — all **responsive** and **reduced-motion-aware** (WCAG AA).
+- **Clean Architecture** per feature (`core`/`data`/`presentation`) with **Repository · Interactor · DI**,
+  on a reusable **`shared/` kernel** (atoms, molecules, hooks, a typed HTTP client).
+- The backend **seeds itself on first boot** — a fresh clone shows real content with **zero admin clicks**.
 
-- External **`fakestoreapi`** integration + the page copy from Strapi, loaded together in one use case.
-- **Detailed error handling by class** (5xx / 4xx / network / parse) via a typed **`HttpError`** mapped to friendly, localized messages.
-- **Dynamic client-side pagination** (page-size options adapt to the total), reusing the shared `Pagination` / `EmptyState` / skeletons.
+**Exercise 2 · Products — error handling done properly.**
 
-**Exercise 3 — Architecture reasoning (microfrontends + DevOps)**
+- Failures are classified at the source — **network / 4xx / 5xx / malformed JSON** — into a typed
+  `HttpError` and turned into **friendly, localized messages** (the edge cases most take-homes skip).
+  External API + CMS copy load in **one use case**, with **pagination that adapts to the data**.
 
-- Built **decision-by-decision** (Socratic) and recorded as **ADRs**, with **Mermaid diagrams** (topology + pipeline).
-- Module Federation (runtime) + a client-side app shell; security via **BFF + httpOnly**, CSP/Trusted Types and trust-based isolation; resilience (bulkheads) + OpenTelemetry observability.
-- A **CI/CD pipeline** with quality & security gates — **including an AI code-review stage** that reviews each PR against the project's own conventions — plus an honest "when _not_ to use microfrontends".
+**Exercise 3 · Microfrontends + DevOps — reasoning you can audit.**
 
-**Exercise 4 — AI-assisted refactoring**
+- Designed **decision-by-decision** and recorded as **ADRs** with **Mermaid diagrams**: a Module
+  Federation shell, **BFF + httpOnly** security, observability — and a full **CI/CD pipeline that
+  includes an AI code-review stage** — plus an honest **"when _not_ to use microfrontends".**
 
-- A messy `fetch` helper refactored to **production-ready TypeScript** (typed input/output, `async/await`, honest error handling with `cause` chaining), **runnable from the repo** (`npm start`), with the prompts documented.
+**Exercise 4 · AI refactoring — production-ready, and runnable.**
 
-**Across the project**
+- A throwaway `fetch` snippet rebuilt into **typed, resilient TypeScript** (validation, real error
+  handling, `cause` chaining) — **runnable from the repo** (`npm start`), prompts included.
 
-- **Testing — 6 suites / 22 tests** (Vitest + React Testing Library): more than the one required, focused on the **hard-to-reproduce error paths** (HTTP classification, propagation, branching).
-- **Conventional commits**, **strict TypeScript** (`erasableSyntaxOnly`), a documented **dependency-audit risk** ([backend/SECURITY.md](backend/SECURITY.md)), and shared conventions in [CLAUDE.md](CLAUDE.md).
+**Across everything** — **6 test suites / 22 tests** (more than the one required, targeting
+hard-to-reproduce error paths) · conventional commits · strict TypeScript · a documented
+**dependency-audit risk** ([backend/SECURITY.md](backend/SECURITY.md)).
 
 ## Run it
 
