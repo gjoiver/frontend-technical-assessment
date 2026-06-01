@@ -9,7 +9,7 @@ A React SPA with two features — a **portfolio** (consuming the Strapi API) and
 - **react-router-dom** v7
 - **react-icons** (UI + brand icons)
 - **@strapi/blocks-react-renderer** (Strapi rich-text blocks)
-- **Vitest** (unit tests)
+- **Vitest** + **React Testing Library** (unit & hook tests)
 
 ## Prerequisites
 
@@ -84,14 +84,20 @@ src/
 
 ## Testing
 
-**Vitest**, reusing the Vite config (path aliases work with no extra setup). Four suites, each targeting a **single responsibility** — pure units with mocked collaborators:
+**Vitest** (+ **React Testing Library** / jsdom for the hook & component tests), reusing the Vite config (path aliases work with no extra setup).
+
+> **Why more than one test?** The assessment asked for **one** unit test; we deliberately added **six**. The highest-value cases — HTTP error **branching by class**, the typed-`HttpError` **classification**, and error **propagation** — are **hard to reproduce by hand** (you can't reliably force a `500`, a dropped connection, or malformed JSON from the browser). Unit tests with **mocked collaborators** are the dependable way to exercise exactly those atypical paths.
+
+Six suites, each targeting a **single responsibility**:
 
 - **`PortfolioMapper`** — DTO → entity mapping (rename / normalize / narrow).
 - **`HttpClient`** — HTTP outcome → typed `HttpError` (`200`→body, `5xx`→`server`, `4xx`→`client`, fetch-throw→`network`, bad JSON→`parse`).
 - **`ProductsInteractor`** — combines products + page and propagates repository failures unchanged.
 - **`resolveProductsError`** — `HttpError.type` → localized message (the UI error branching).
+- **`usePagination`** — client-side pagination logic (`renderHook` + `act`, jsdom).
+- **`ProjectList`** — the portfolio's main visual component: renders project titles + technology tags, and nothing when empty (RTL `render`, jsdom).
 
-Together the last three tell the full error story: the client _classifies_ the failure, the interactor _propagates_ its type intact, and the resolver _maps_ it to copy. All follow **AAA** (`// Arrange / // Act / // Assert`) + **Gherkin** scenario names (`Given … / When … / Then …`); fixtures live in each feature's `data/mocks/`.
+Together the error trio tells the full story: the client _classifies_ the failure, the interactor _propagates_ its type intact, and the resolver _maps_ it to copy. All follow **AAA** (`// Arrange / // Act / // Assert`) + **Gherkin** scenario names (`Given … / When … / Then …`); fixtures live in each feature's `data/mocks/`.
 
 ```bash
 npm run test
@@ -103,15 +109,45 @@ Full frontend conventions (layers, naming, imports, `erasableSyntaxOnly`, typogr
 
 ## AI Usage
 
-This SPA was built with AI assistance (Claude) in a step-by-step, phase-by-phase flow.
+Built **AI-assisted** (Claude / Claude Code): the AI proposed options, trade-offs and risks; the
+**human made every decision**. Each exercise documents AI usage **as its own brief requires**.
 
-- **Surfacing open loops.** AI was asked to review the repo and flag the project's open loops — loose ends and inconsistencies, e.g. docs that had drifted from the actual code, missing barrel exports, and a frontend/backend **port + CORS** mismatch — so they were closed deliberately instead of left dangling.
-- **Validating happy paths, edge cases and errors.** Behavior was checked against the three: the **happy path** (a fully populated portfolio), **edge cases** (null/empty collections normalized to `[]`/`undefined`, an invalid skill level narrowed away, empty sections hidden, long text collapsed behind "show more"), and **errors** (a typed `HttpError` with `network | server | client | parse` types plus the page's loading/error states). The unit test on `PortfolioMapper` encodes the happy + edge cases.
-- **Technical decisions, reasoned before coding.** Trade-offs were discussed and justified rather than assumed — the **DTO/mapper boundary** vs. shaping the response in the backend; **where to wire dependencies** (interactor building its use cases from injected ports vs. the composition root); wrapping the **official blocks renderer** to contain the Strapi coupling; **alias-vs-relative** imports; **`Text` typography variants** over raw `as`; **centralized i18n**; and dropping over-engineering where it added no value.
-- **Architecture applied incrementally** (shared kernel → core → data → presentation → composition root), checkpointed in `ROADMAP.md`, with a **code review per phase**; conventions were captured in `../CLAUDE.md` as they emerged.
+### Exercise 1 — Portfolio
 
-### Exercise 2 — products integration
+> _Requirement: "Explain how AI contributed to your solution."_
 
-- **Open loops.** AI surfaced the E2-specific loose ends before they bit: a Strapi `intro` field that turned out to be **plain text, not blocks** (rendering it through `RichTextRenderer` crashed with `props.content.map is not a function`); the **StrictMode double-fetch** in dev (explained as expected behavior, gone in a production build — not a bug); and **hardcoded nav labels** in the app shell (moved to a co-located `AppLayout.config.ts`).
-- **Happy path / edge cases / errors.** _Happy:_ products + page copy load together via **one combined use case** (`Promise.all`). _Edge:_ **client-side pagination** (10/20/50 per page, "Página X de Y") since the API returns everything at once, and equal-height cards that keep the price **pinned bottom-left** regardless of title length. _Errors:_ the **5xx / 4xx / network / parse** branching lives in the `httpClient` and is surfaced as localized copy via `resolveProductsError` — both under unit test.
-- **Technical decisions, reasoned before coding.** Combined load (one use case) vs. two independent fetches; a **reusable `formatCurrency`** (`Intl.NumberFormat`) over ad-hoc string formatting; **testing the branching where it lives** (client classifies, interactor propagates, resolver maps) instead of from the interactor alone; and promoting **`RichTextRenderer` + pagination** to `shared/ui` for reuse across features.
+AI contributed across the whole build: it **planned the work**, proposed the page **structure**, and
+generated the code — reviewed and approved by the human — for a portfolio that **loads a person's
+profile from the CMS and shows it responsively**, with clear **loading and error** states. It also
+**surfaced the edge cases** (missing/empty data, over-long text collapsed behind "show more") and
+wrote the **automated test**.
+
+### Exercise 2 — Products
+
+> _Requirement: "Document AI assistance in the design of the solution."_
+
+AI assisted mainly in the **design**, before any code: it analysed the **happy path, edge cases and
+failure modes**; proposed loading the **product list and the page's intro text together**; designed
+the **per-failure messaging** (server down / not found / no connection / unexpected response); and
+shaped the **user-controlled pagination**. The human chose each design option.
+
+### Exercise 3 — Architecture reasoning
+
+> _Requirement: "A screenshot or textual transcription of the AI prompts used."_
+
+The full prompt transcription is part of that deliverable →
+[microfrontend-architecture-reasoning/exercise-3-architecture.md](../microfrontend-architecture-reasoning/exercise-3-architecture.md).
+
+### Exercise 4 — AI-assisted refactoring
+
+> _Requirement: "Explain which prompts were used."_
+
+The prompts and what each produced are documented with the code →
+[ai-assisted-refactoring/README.md](../ai-assisted-refactoring/README.md).
+
+### Enhancements (beyond the brief)
+
+AI also helped polish past the requirements: a more attractive UI, **SEO**, **loading & empty
+states**, safer configuration, **more tests** for the hard-to-reproduce failures, and a documented
+**security** review — while flagging what would **exceed the scope** (Docker/CI, auth, an i18n
+library, E2E) so it was intentionally skipped.
