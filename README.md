@@ -18,6 +18,38 @@ AI-assisted refactor).
 > Quality criteria (responsive / mobile-first, clean-code, clean architecture) are detailed in
 > [frontend/README.md](frontend/README.md).
 
+## Frontend highlights
+
+**Own design system & brand.** A dark, elegant theme with a violet→indigo signature gradient, built
+on **design tokens** as the single source of truth (color · spacing · typography · radius · shadow ·
+motion · z-index · layout) — components read `theme.*`, never hardcoded values. Atomic Design +
+styled-components, with the rules documented in the **brand manual** ([BRAND.md](BRAND.md)).
+
+**Visual craft** (all respecting **`prefers-reduced-motion`**, **responsive mobile-first**, **WCAG AA**):
+
+- **Animated hero** — drifting "aurora" gradient + shimmering headline + call-to-actions.
+- **Scroll-reveal** — sections fade/slide in as you scroll.
+- **Skill meters** — each level (Beginner / Intermediate / Advanced) shown as a colored bar.
+- **Tech brand icons** — skills and project stacks rendered with their real logos.
+- **Actionable contact** — tap-to-call (`tel:`), `mailto:`, and copy-to-clipboard with feedback.
+- **Experience timeline** + a **sticky header** with a scroll-progress bar and active-section highlight.
+- **Loading skeletons** + **empty states**, and **SEO** via React 19 native metadata.
+
+**Reusable `shared/` design-system kernel** (consumed by both features):
+
+- **Atoms:** `Text` (typographic variants), `Button`, `Tag`, `TechIcon`, `Skeleton`, `Reveal`, `Spinner`.
+- **Molecules:** `Card`, `SectionTitle`, `Pagination` (dynamic), `EmptyState`, `ErrorState`, `RichTextRenderer`, `Expandable`.
+- **Hooks:** `usePagination`, `useClipboard`, `useReveal`, `useScrollProgress`, `useScrollSpy`.
+- **Lib:** injected `HttpClient` + typed `HttpError`, `Seo`, `formatCurrency` / `sanitizePhone`.
+
+**Testing — 6 suites / 22 tests** (Vitest + React Testing Library). The brief asked for **one**; we
+added more because the highest-value paths — **HTTP error classification, propagation and branching** —
+are hard to reproduce by hand (a `500`, a dropped connection, malformed JSON):
+
+- `PortfolioMapper` (DTO→entity) · `HttpClient` (outcome→typed error) · `ProductsInteractor`
+  (combine + propagate) · `resolveProductsError` (type→message) · `usePagination` (hook) ·
+  `ProjectList` (component, RTL).
+
 ## Run it
 
 **Two terminals.** Backend first, then frontend.
