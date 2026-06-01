@@ -119,12 +119,12 @@ Cada sub-decisión se resuelve socráticamente.
 - ¿Cómo manejas **ambientes, secretos y permisos** (OIDC, RBAC, aprobaciones)?
 - ¿**Build-once-promote** o rebuild por ambiente?
 
-- [ ] 7.1 Triggers + affected-only
-- [ ] 7.2 Quality & security gates
-- [ ] 7.3 Fase de AI code review
-- [ ] 7.4 Ambientes + access control
-- [ ] 7.5 Progressive delivery (canary, flags) + rollback
-- [ ] **7.6 ADR-010: pipeline de entrega**
+- [x] 7.1 Triggers + affected-only
+- [x] 7.2 Quality & security gates (new-code coverage, Sonar, security scans, budgets, contract tests)
+- [x] 7.3 Fase de AI code review (advisory)
+- [x] 7.4 Ambientes (**develop → release → main**) + access control (OIDC, RBAC, aprobación en main)
+- [x] 7.5 Progressive delivery (canary/blue-green, feature flags) + rollback por re-pin
+- [x] **7.6 ADR-010: pipeline de entrega**
 
 ## Fase 8 — Performance y escalado
 

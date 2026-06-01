@@ -319,5 +319,60 @@ this keeps MTTR well under the ADR-000 target.
 
 ---
 
+## Phase 7 — Delivery (CI/CD)
+
+Tool-agnostic stages, with concrete tools named where useful (SonarQube, GitHub Actions, OIDC).
+Defining principle: **one independent pipeline per MFE** + a lightweight shell/integration pipeline.
+
+### 7.1 Triggers & affected-only
+
+Every **push/PR** runs the pipeline, scoped to the **affected MFEs only** (path filters / affected
+graph), so CI cost stays flat as MFE count grows. PRs run full validation + an **ephemeral
+preview**; merges **promote** the artifact through the environments.
+
+### 7.2 Quality & security gates (block the merge)
+
+- lint + typecheck;
+- tests + **new-code (diff) coverage** — the lines changed in the PR must hit a minimum;
+- **SonarQube** ("Clean as You Code": bugs, code smells, security hotspots, duplication);
+- **security scans**: dependency/SCA, SBOM, secret scanning, **signed immutable artifacts**;
+- **budgets**: bundle size, Lighthouse/Core Web Vitals, accessibility;
+- **contract tests** host↔remote.
+
+### 7.3 AI code review
+
+A CI job (e.g. **GitHub Actions** + the Claude action) reviews the **PR diff** against the
+**project's conventions** and posts **inline comments** — **advisory**, complementing human review
+with context-aware judgment that deterministic linters/Sonar cannot express.
+
+### 7.4 Environments & access control
+
+- **Three promotion tiers — `develop` → `release` → `main`** (integration → release-candidate →
+  production), each with its own config, secrets, and remotes manifest. PRs also get an
+  **ephemeral preview**, torn down on merge.
+- **Build-once-promote:** the same immutable artifact moves `develop` → `release` → `main`;
+  environment differences are injected as runtime config, never rebuilt.
+- **`main` (production) is a protected environment** requiring **manual approval**.
+- **OIDC** keyless auth to cloud (short-lived tokens, no stored long-lived keys); secrets **per
+  environment**; **per-team RBAC** (a team deploys only its MFE); CODEOWNERS enforce who merges.
+
+### 7.5 Progressive delivery & rollback
+
+Ephemeral preview per PR; **canary / blue-green** rollout to `main`; **feature flags** to decouple
+*deploy* from *release*; rollback = **manifest re-pin** (ADR-009).
+
+> **ADR-010 — Delivery pipeline**
+> - **Context:** N teams deploy independently; quality, security, and speed must hold with no
+>   shared release train.
+> - **Decision:** **per-MFE pipeline** on push/PR (**affected-only**); gates for lint/typecheck,
+>   **new-code coverage**, **Sonar**, security scans, budgets, and contract tests; an **AI
+>   code-review** stage (advisory); three environments **`develop` → `release` → `main`** with
+>   **build-once-promote**, **OIDC**, **per-team RBAC**, and **manual approval on `main`**;
+>   **progressive delivery** (canary/blue-green + feature flags) with **rollback by manifest re-pin**.
+> - **Consequences:** independent, fast, quality/security-gated delivery; in exchange, more CI/CD
+>   infrastructure to govern.
+
+---
+
 > **Status:** built incrementally via [exercise-3-roadmap.md](exercise-3-roadmap.md). **Next:**
-> Phase 7 — delivery (CI/CD) → ADR-010.
+> Phase 8 — performance & scaling → ADR-011.
