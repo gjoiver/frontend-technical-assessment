@@ -281,5 +281,43 @@ injection or a misbehaving remote early.
 
 ---
 
+## Phase 6 — Resilience & observability
+
+### 6.1 Failure isolation (bulkheads)
+
+Each remote is wrapped in an **error boundary** with a **fallback UI** and a **load timeout**: a
+remote that throws, or fails/stalls on load, degrades **its own slot** without crashing the shell
+or sibling MFEs (the runtime contract check from ADR-007 refuses incompatible remotes the same
+way). Principle: one MFE's failure is contained to its compartment — a **bulkhead**.
+
+### 6.2 Observability
+
+- Each MFE **tags** its telemetry (`mfe` name, version) so errors and metrics are **attributable**
+  to the owning remote/team.
+- A **correlation-id** is propagated shell → MFE → BFF → downstream, so a single request is
+  traceable **end-to-end** across MFEs.
+- Instrumentation uses **OpenTelemetry** (vendor-neutral) so the observability backend stays
+  **swappable**; concrete options: **Grafana Faro + the LGTM stack** (RUM, metrics, logs, traces)
+  and/or **Sentry** (error tracking with source maps + per-version release health). **Deploy
+  markers** correlate a regression with the deploy that caused it.
+
+### 6.3 Rollback
+
+Because the shell resolves remotes from a **versioned manifest**, rollback = **re-pin the previous
+version** in the manifest → seconds, no full redeploy. Combined with canary + RUM watch (Phase 7),
+this keeps MTTR well under the ADR-000 target.
+
+> **ADR-009 — Resilience & observability**
+> - **Context:** independently-deployed remotes can fail independently; failures must be contained,
+>   errors attributable, and recovery fast.
+> - **Decision:** per-remote **error boundaries + fallback + load timeout** (bulkheads);
+>   **OpenTelemetry** instrumentation **tagged per MFE** + **correlation-id** propagation +
+>   centralized RUM/error tracking (vendor-neutral — e.g. Grafana Faro/LGTM and/or Sentry) + deploy
+>   markers; **rollback via manifest re-pin**.
+> - **Consequences:** a failing MFE degrades locally, not globally; errors are attributable to a
+>   team; low MTTR; adds per-MFE observability wiring and a tooling-governance choice.
+
+---
+
 > **Status:** built incrementally via [exercise-3-roadmap.md](exercise-3-roadmap.md). **Next:**
-> Phase 6 — resilience & observability → ADR-009.
+> Phase 7 — delivery (CI/CD) → ADR-010.

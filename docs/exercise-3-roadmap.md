@@ -106,10 +106,10 @@ Cada sub-decisión se resuelve socráticamente.
 - En prod, ¿cómo sabes **de qué MFE** vino un error?
 - ¿Cómo **detectas y revertís** un deploy malo, y en cuánto tiempo (MTTR)?
 
-- [ ] 6.1 Aislamiento de fallos (error boundaries, fallback, timeout, bulkheads)
-- [ ] 6.2 Observabilidad (tagging por MFE, correlation-id, RUM/error tracking)
-- [ ] 6.3 Estrategia de rollback (re-pin del manifest)
-- [ ] **6.4 ADR-009: resiliencia y observabilidad**
+- [x] 6.1 Aislamiento de fallos → error boundaries + fallback + timeout (bulkheads)
+- [x] 6.2 Observabilidad → OpenTelemetry + tagging por MFE + correlation-id; RUM/errores (Grafana Faro/LGTM, Sentry)
+- [x] 6.3 Estrategia de rollback → re-pin del manifest
+- [x] **6.4 ADR-009: resiliencia y observabilidad**
 
 ## Fase 7 — Entrega (CI/CD)
 
