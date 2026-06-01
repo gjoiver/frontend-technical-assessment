@@ -18,37 +18,35 @@ AI-assisted refactor).
 > Quality criteria (responsive / mobile-first, clean-code, clean architecture) are detailed in
 > [frontend/README.md](frontend/README.md).
 
-## Frontend highlights
+## Highlights
 
-**Own design system & brand.** A dark, elegant theme with a violet→indigo signature gradient, built
-on **design tokens** as the single source of truth (color · spacing · typography · radius · shadow ·
-motion · z-index · layout) — components read `theme.*`, never hardcoded values. Atomic Design +
-styled-components, with the rules documented in the **brand manual** ([BRAND.md](BRAND.md)).
+**Exercise 1 — Portfolio**
 
-**Visual craft** (all respecting **`prefers-reduced-motion`**, **responsive mobile-first**, **WCAG AA**):
+- **Backend:** read-only Strapi 5 API with **idempotent self-seeding on bootstrap** (a clean clone serves real content with **no admin step**), controller-level populate (stable contract), v5 Document Service, env-locked CORS.
+- **Frontend architecture:** Clean Architecture per feature (`core` / `data` / `presentation`) + **Repository + Interactor** + DI at a composition root; DTO→entity mappers; a reusable **`shared/` design-system kernel** (atoms, molecules, hooks, injected `HttpClient`).
+- **Own design system:** **design tokens** as the single source of truth, dark theme + violet→indigo gradient, Atomic Design — governed by the **brand manual** ([BRAND.md](BRAND.md)).
+- **Visual craft:** animated hero (aurora + shimmer + CTAs), scroll-reveal, skill-level meters, tech brand icons, **actionable contact** (tap-to-call / `mailto:` / copy), experience timeline, sticky header with **scroll-progress + active-section** highlight, skeletons & empty states, **SEO** via React 19 metadata — all **responsive (mobile-first)**, **WCAG AA**, `prefers-reduced-motion`-aware.
 
-- **Animated hero** — drifting "aurora" gradient + shimmering headline + call-to-actions.
-- **Scroll-reveal** — sections fade/slide in as you scroll.
-- **Skill meters** — each level (Beginner / Intermediate / Advanced) shown as a colored bar.
-- **Tech brand icons** — skills and project stacks rendered with their real logos.
-- **Actionable contact** — tap-to-call (`tel:`), `mailto:`, and copy-to-clipboard with feedback.
-- **Experience timeline** + a **sticky header** with a scroll-progress bar and active-section highlight.
-- **Loading skeletons** + **empty states**, and **SEO** via React 19 native metadata.
+**Exercise 2 — Products**
 
-**Reusable `shared/` design-system kernel** (consumed by both features):
+- External **`fakestoreapi`** integration + the page copy from Strapi, loaded together in one use case.
+- **Detailed error handling by class** (5xx / 4xx / network / parse) via a typed **`HttpError`** mapped to friendly, localized messages.
+- **Dynamic client-side pagination** (page-size options adapt to the total), reusing the shared `Pagination` / `EmptyState` / skeletons.
 
-- **Atoms:** `Text` (typographic variants), `Button`, `Tag`, `TechIcon`, `Skeleton`, `Reveal`, `Spinner`.
-- **Molecules:** `Card`, `SectionTitle`, `Pagination` (dynamic), `EmptyState`, `ErrorState`, `RichTextRenderer`, `Expandable`.
-- **Hooks:** `usePagination`, `useClipboard`, `useReveal`, `useScrollProgress`, `useScrollSpy`.
-- **Lib:** injected `HttpClient` + typed `HttpError`, `Seo`, `formatCurrency` / `sanitizePhone`.
+**Exercise 3 — Architecture reasoning (microfrontends + DevOps)**
 
-**Testing — 6 suites / 22 tests** (Vitest + React Testing Library). The brief asked for **one**; we
-added more because the highest-value paths — **HTTP error classification, propagation and branching** —
-are hard to reproduce by hand (a `500`, a dropped connection, malformed JSON):
+- Built **decision-by-decision** (Socratic) and recorded as **ADRs**, with **Mermaid diagrams** (topology + pipeline).
+- Module Federation (runtime) + a client-side app shell; security via **BFF + httpOnly**, CSP/Trusted Types and trust-based isolation; resilience (bulkheads) + OpenTelemetry observability.
+- A **CI/CD pipeline** with quality & security gates — **including an AI code-review stage** that reviews each PR against the project's own conventions — plus an honest "when *not* to use microfrontends".
 
-- `PortfolioMapper` (DTO→entity) · `HttpClient` (outcome→typed error) · `ProductsInteractor`
-  (combine + propagate) · `resolveProductsError` (type→message) · `usePagination` (hook) ·
-  `ProjectList` (component, RTL).
+**Exercise 4 — AI-assisted refactoring**
+
+- A messy `fetch` helper refactored to **production-ready TypeScript** (typed input/output, `async/await`, honest error handling with `cause` chaining), **runnable from the repo** (`npm start`), with the prompts documented.
+
+**Across the project**
+
+- **Testing — 6 suites / 22 tests** (Vitest + React Testing Library): more than the one required, focused on the **hard-to-reproduce error paths** (HTTP classification, propagation, branching).
+- **Conventional commits**, **strict TypeScript** (`erasableSyntaxOnly`), a documented **dependency-audit risk** ([backend/SECURITY.md](backend/SECURITY.md)), and shared conventions in [CLAUDE.md](CLAUDE.md).
 
 ## Run it
 
