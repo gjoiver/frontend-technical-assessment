@@ -43,9 +43,9 @@ Fijar el problema y los criterios de éxito **antes** de cualquier tecnología.
 - ¿Qué tan independientes son los dominios? ¿Comparten datos/estado críticos?
 - Un cambio *típico*, ¿toca un solo slice o varios? (si toca varios, el corte está mal)
 
-- [ ] 1.1 Mapear dominios → candidatos a MFE (shell, `portfolio`, `products`, futuros)
-- [ ] 1.2 Ownership por equipo
-- [ ] **1.3 ADR-001: ejes de decomposición y límites de cada MFE**
+- [x] 1.1 Mapear dominios → candidatos a MFE (shell + un MFE por dominio A/B/C…)
+- [x] 1.2 Ownership por equipo (un equipo stream-aligned por dominio)
+- [x] **1.3 ADR-001: decomposición vertical por capacidad de negocio; shell + design system compartido**
 
 ## Fase 2 — Estrategia de integración (¿cómo se unen?)
 

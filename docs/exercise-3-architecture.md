@@ -4,13 +4,12 @@
 > DevOps practices** (scalability, maintainability, performance, security).
 >
 > It is built **decision by decision** following [exercise-3-roadmap.md](exercise-3-roadmap.md):
-> each decision is derived Socratically from its forces and recorded as an **ADR**
-> (Architecture Decision Record — log at the end). The context is **generic** — an organization
-> of several autonomous teams owning independent business **domains (A, B, C, …)** — so the
-> reasoning stays about the *architecture*, not a specific product.
+> each decision is derived Socratically from its forces and closed as an **ADR** (Architecture
+> Decision Record, in a box at the end of its phase). The context is **generic** — an
+> organization of several autonomous teams owning independent business **domains (A, B, C, …)** —
+> so the reasoning stays about the *architecture*, not a specific product.
 >
-> The problem analysis (open loops / happy path / edge cases / errors) is produced per phase as
-> we resolve it. A later phase documents **when *not* to use microfrontends**.
+> A later phase documents **when *not* to use microfrontends**.
 
 ---
 
@@ -23,8 +22,8 @@
 - **High release cadence:** teams must ship their domain **independently**, with no shared
   release train.
 - This is the scale regime in which microfrontends are warranted — the exercise's premise. The
-  reasoning therefore designs *for* that scale; it does not re-litigate "MFE vs. modular
-  monolith" (covered as a closing trade-off).
+  reasoning designs *for* that scale rather than re-litigating "MFE vs. modular monolith"
+  (kept as a closing trade-off).
 
 ### Drivers (the problem microfrontends solve here)
 
@@ -33,7 +32,7 @@
 
 ### Success criteria (measurable NFRs)
 
-Every later decision is evaluated against these targets:
+Every later decision is held to these targets:
 
 | Dimension | Metric | Target |
 |---|---|---|
@@ -42,27 +41,58 @@ Every later decision is evaluated against these targets:
 | **Efficiency** | initial JS per remote (gz) · remote load success | < ~150 KB · > 99.9% |
 | **Fitness functions** | forbidden cross-MFE imports · contract tests | 0 · green in CI |
 
-Threaded through **every** decision below: the four cross-cutting requirements —
-**scalability · maintainability · performance · security**.
+Threaded through **every** decision below: **scalability · maintainability · performance ·
+security**.
+
+> **ADR-000 — Context & success criteria**
+> - **Context:** a generic multi-team (~5–8) front-end platform with independent domains and a
+>   high release cadence; microfrontends are the exercise premise.
+> - **Decision:** adopt a microfrontend architecture **driven by independent deployability and
+>   team autonomy** (not performance/SEO); hold every later decision to the **DORA + Core Web
+>   Vitals + fitness-function** targets above.
+> - **Consequences:** gains team autonomy and independent delivery; accepts runtime overhead, a
+>   wider security surface, and operational complexity — governed in later phases.
 
 ---
 
-## Architecture Decision Records
+## Phase 1 — Decomposition (where do we cut?)
 
-> Format: **Context · Decision · Consequences**. One ADR per decision, filled as the roadmap
-> phases are executed.
+**Axis: vertical, by business capability.** Each MFE maps to one **business domain / bounded
+context** and is owned **end-to-end by a single stream-aligned team** (UI → application logic →
+data access). This aligns the architecture with the org (Conway's law), so a team ships its
+domain without coordinating with others.
 
-### ADR-000 — Context & success criteria
+**Rejected — horizontal slicing** (a "header" MFE, a "components" team): every functional change
+would cross several MFEs and teams, maximizing coupling — the opposite of the goal.
 
-- **Context:** a generic multi-team (~5–8) front-end platform with independent domains and a
-  high release cadence; microfrontends are the exercise premise.
-- **Decision:** adopt a microfrontend architecture **driven by independent deployability and
-  team autonomy** (not performance/SEO), and hold every subsequent decision to the **DORA +
-  Core Web Vitals + fitness-function** targets above.
-- **Consequences:** gains team autonomy and independent delivery; accepts runtime overhead, a
-  wider security surface, and operational complexity — to be governed in later phases.
+**Granularity.** An MFE = the **deployable unit one team owns** — not finer (a button is not an
+MFE; that is orchestration overhead) and not coarser (the whole app). Empirical test: **a typical
+change touches exactly one MFE**; if it routinely spans several, the boundary is wrong.
+Boundaries follow **DDD bounded contexts** — domains that always change together and share data
+are a single MFE.
+
+**Not microfrontends:**
+
+- The **shell** — a thin **host** (platform team) that **composes and renders** the MFEs:
+  layout, top-level routing, auth/session, and the remote registry.
+- The **design system** — shared, cross-domain UI (atoms, tokens) as a **versioned shared
+  library** consumed by every MFE. A library, not an MFE.
+
+**Trade-off accepted:** vertical autonomy duplicates some cross-cutting (each MFE its own data
+fetching/state) — contained by the **shared kernel** (design system, HTTP client, contracts).
+Horizontal slicing would avoid the duplication but kill autonomy; we choose autonomy.
+
+> **ADR-001 — Decomposition strategy**
+> - **Context:** assign domains to teams with minimal cross-team coupling.
+> - **Decision:** **vertical decomposition by business capability / bounded context** — one MFE
+>   per domain, owned end-to-end by one stream-aligned team; a thin **shell** (platform team)
+>   renders the MFEs; a shared **design-system library** serves all MFEs. Granularity rule: an
+>   MFE = a team's deployable domain; a typical change touches one MFE.
+> - **Consequences:** maximizes autonomy and independent deploy; accepts some cross-cutting
+>   duplication (contained by the shared kernel); requires **governance of the shared design
+>   system** (Phase 4).
 
 ---
 
-> **Status:** this document is built incrementally via
-> [exercise-3-roadmap.md](exercise-3-roadmap.md). **Next:** Phase 1 — decomposition (ADR-001).
+> **Status:** built incrementally via [exercise-3-roadmap.md](exercise-3-roadmap.md). **Next:**
+> Phase 2 — integration strategy (runtime vs. build-time; federation mechanism) → ADR-002.
