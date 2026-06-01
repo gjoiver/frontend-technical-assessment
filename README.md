@@ -53,6 +53,7 @@ Applied practices:
 ## Documentation
 
 - **Exercise 3 — microfrontend & DevOps architecture reasoning:** [microfrontend-architecture-reasoning/exercise-3-architecture.md](microfrontend-architecture-reasoning/exercise-3-architecture.md) (built decision-by-decision via [microfrontend-architecture-reasoning/exercise-3-roadmap.md](microfrontend-architecture-reasoning/exercise-3-roadmap.md))
+- **Exercise 4 — AI-assisted code refactoring:** [ai-assisted-refactoring/README.md](ai-assisted-refactoring/README.md) (final code: [getUser.ts](ai-assisted-refactoring/getUser.ts))
 - Guardrails and conventions (backend + frontend): [CLAUDE.md](CLAUDE.md)
 - Backend details: [backend/README.md](backend/README.md) · roadmap: [backend/ROADMAP.md](backend/ROADMAP.md)
 - Frontend details: [frontend/README.md](frontend/README.md) · roadmap: [frontend/ROADMAP.md](frontend/ROADMAP.md)
