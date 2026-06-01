@@ -1,9 +1,5 @@
 import type { SeoProps } from "./Seo.types";
 
-/**
- * Renders document metadata. React 19 hoists <title>/<meta> into <head>,
- * so no external head-management library is needed.
- */
 export function Seo({ title, description, keywords }: SeoProps) {
   return (
     <>
