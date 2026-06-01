@@ -65,9 +65,9 @@ Fijar el problema y los criterios de éxito **antes** de cualquier tecnología.
 - ¿Quién posee el shell y cuál es su responsabilidad **mínima**?
 - ¿Cuál es el **disparador explícito** para migrar a SSR (no "algún día")?
 
-- [ ] 3.1 CSR shell vs SSR/edge (+ trigger de cambio)
-- [ ] 3.2 Responsabilidades del shell (layout · routing top-level · auth · registry)
-- [ ] **3.3 ADR-003: modelo de composición**
+- [x] 3.1 CSR shell vs SSR/edge → **CSR**, con SSR selectivo como trigger
+- [x] 3.2 Responsabilidades del shell (layout · routing top-level · auth · registry · singletons · boundaries)
+- [x] **3.3 ADR-003: modelo de composición**
 
 ## Fase 4 — Contratos y concerns compartidos (¿cómo cooperan sin acoplarse?)
 

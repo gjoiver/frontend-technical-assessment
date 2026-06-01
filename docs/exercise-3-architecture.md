@@ -126,5 +126,32 @@ ESM-native, more future-proof).
 
 ---
 
+## Phase 3 — Composition & rendering (who orchestrates, where it renders)
+
+**The shell composes; rendering is client-side.** The **shell** (host) composes and mounts the
+remotes in the browser. Its **minimal** responsibilities: layout/chrome, **top-level routing**,
+**auth/session**, the **remote registry/manifest** resolution, provisioning **shared singletons**,
+and a **per-remote error boundary**. No domain logic — that lives in the MFEs.
+
+**CSR-first, SSR as a selective trigger.** A client-side app shell is the lowest-complexity
+composition and pairs naturally with runtime Module Federation. SSR/edge (server runtime,
+hydration, harder federated SSR) is deferred to a **documented trigger**: a specific MFE that
+needs SEO (public/indexable content) or whose **LCP/TTFB breaks budget** is rendered with
+**selective SSR** (hybrid) — never platform-wide upfront. A multi-team platform is mostly
+authenticated, where CSR is appropriate; this avoids paying SSR's operational complexity early.
+
+> **ADR-003 — Composition & rendering**
+> - **Context:** the shell must compose remotes; most of the platform is authenticated (SEO
+>   irrelevant); SSR adds real operational complexity (federated SSR + hydration).
+> - **Decision:** a **client-side app shell (CSR)** composes and mounts remotes; the shell owns
+>   layout, top-level routing, auth/session, the remote registry, shared singletons, and
+>   per-remote error boundaries. **SSR/edge is a selective trigger** applied to a single MFE when
+>   it needs SEO or breaches its LCP/TTFB budget.
+> - **Consequences:** simplest composition, fast to evolve; defers SEO/TTFB work to where it is
+>   actually needed; the trigger keeps the door open with no upfront cost.
+
+---
+
 > **Status:** built incrementally via [exercise-3-roadmap.md](exercise-3-roadmap.md). **Next:**
-> Phase 3 — composition & rendering (CSR shell vs. SSR/edge) → ADR-003.
+> Phase 4 — shared concerns & contracts (routing, communication, design system, versioning) →
+> ADR-004…007.
