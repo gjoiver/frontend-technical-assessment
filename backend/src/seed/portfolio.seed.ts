@@ -73,9 +73,10 @@ export const portfolioSeed = {
     },
   ],
   seo: {
-    metaTitle: "Portfolio",
-    metaDescription: "Personal Portfolio",
-    keywords: "portfolio, personal, angular, frontend, react, css, html",
+    metaTitle: "Joiver González — Ingeniero de Software Frontend",
+    metaDescription:
+      "Ingeniero Frontend con 4 años de experiencia en Angular, TypeScript, microfrontends y arquitecturas escalables.",
+    keywords: "portfolio, frontend, angular, react, typescript, microfrontends",
   },
   projects: [
     {

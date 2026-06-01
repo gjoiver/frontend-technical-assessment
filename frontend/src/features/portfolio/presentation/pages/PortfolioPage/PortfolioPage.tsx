@@ -1,6 +1,9 @@
-import { Spinner, Text } from "@shared/ui/atoms";
+import { Text } from "@shared/ui/atoms";
+import { Seo } from "@shared/ui/Seo";
 import {
   Header,
+  Hero,
+  PortfolioSkeleton,
   AboutSection,
   ProjectList,
   SkillGrid,
@@ -17,9 +20,9 @@ export function PortfolioPage({ interactor }: PortfolioPageProps) {
 
   if (loading) {
     return (
-      <Centered>
-        <Spinner />
-      </Centered>
+      <Container>
+        <PortfolioSkeleton />
+      </Container>
     );
   }
 
@@ -35,8 +38,21 @@ export function PortfolioPage({ interactor }: PortfolioPageProps) {
 
   return (
     <>
+      {data.seo ? (
+        <Seo
+          title={data.seo.metaTitle}
+          description={data.seo.metaDescription}
+          keywords={data.seo.keywords}
+        />
+      ) : null}
       <Header />
       <Container>
+        {data.seo ? (
+          <Hero
+            title={data.seo.metaTitle}
+            subtitle={data.seo.metaDescription}
+          />
+        ) : null}
         <AboutSection aboutMe={data.aboutMe} />
         <SkillGrid skills={data.skills} />
         <ExperienceList experience={data.experience} />

@@ -12,14 +12,16 @@ export function usePortfolio(
   });
 
   useEffect(() => {
-    let active = true;
+    const controller = new AbortController();
 
     const getPortfolio = async () => {
       try {
         const data = await interactor.getPortfolio();
-        if (active) setState({ data, loading: false, error: null });
+        if (!controller.signal.aborted) {
+          setState({ data, loading: false, error: null });
+        }
       } catch (error) {
-        if (active) {
+        if (!controller.signal.aborted) {
           setState({
             data: null,
             loading: false,
@@ -31,9 +33,7 @@ export function usePortfolio(
 
     void getPortfolio();
 
-    return () => {
-      active = false;
-    };
+    return () => controller.abort();
   }, [interactor]);
 
   return state;

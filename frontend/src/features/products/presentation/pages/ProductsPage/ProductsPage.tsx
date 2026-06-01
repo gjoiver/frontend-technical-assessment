@@ -1,9 +1,8 @@
-import { Spinner } from "@shared/ui/atoms";
 import { ErrorState } from "@shared/ui/molecules";
 import { useProductsPage } from "@products/presentation/hooks/useProductsPage";
 import { resolveProductsError } from "@products/presentation/i18n";
-import { ProductsContent } from "@products/presentation/components";
-import { Container, Centered } from "./ProductsPage.styles";
+import { ProductsContent, ProductsSkeleton } from "@products/presentation/components";
+import { Container } from "./ProductsPage.styles";
 import type { ProductsPageProps } from "./ProductsPage.types";
 
 export function ProductsPage({ interactor }: ProductsPageProps) {
@@ -11,9 +10,9 @@ export function ProductsPage({ interactor }: ProductsPageProps) {
 
   if (loading) {
     return (
-      <Centered>
-        <Spinner />
-      </Centered>
+      <Container>
+        <ProductsSkeleton />
+      </Container>
     );
   }
 

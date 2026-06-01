@@ -2,6 +2,7 @@ import type { HttpErrorType } from "@shared/lib/constants";
 
 export const productsI18n = {
   title: "Productos",
+  empty: "No hay productos disponibles",
   pagination: {
     perPage: "por página",
     prev: "Página anterior",
