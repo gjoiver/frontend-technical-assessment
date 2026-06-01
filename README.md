@@ -51,10 +51,55 @@ server is pinned to **5174** (the backend's allowed CORS origin), so keep the ba
 └── ai-assisted-refactoring/            # Exercise 4 — refactored getUser + prompts
 ```
 
+## AI Usage
+
+Built **AI-assisted** (Claude / Claude Code): the AI proposed options, trade-offs and risks; the
+**human made every decision**. Each exercise documents AI usage **as its own brief requires**.
+
+### Exercise 1 — Portfolio
+
+> _Requirement: "Explain how AI contributed to your solution."_
+
+AI contributed across the whole build: it **planned the work**, proposed the page **structure**, and
+generated the code — reviewed and approved by the human — for a portfolio that **loads a person's
+profile from the CMS and shows it responsively**, with clear **loading and error** states. It also
+**surfaced the edge cases** (missing/empty data, over-long text collapsed behind "show more") and
+wrote the **automated test**.
+
+### Exercise 2 — Products
+
+> _Requirement: "Document AI assistance in the design of the solution."_
+
+AI assisted mainly in the **design**, before any code: it analysed the **happy path, edge cases and
+failure modes**; proposed loading the **product list and the page's intro text together**; designed
+the **per-failure messaging** (server down / not found / no connection / unexpected response); and
+shaped the **user-controlled pagination**. The human chose each design option.
+
+### Exercise 3 — Architecture reasoning
+
+> _Requirement: "A screenshot or textual transcription of the AI prompts used."_
+
+The full prompt transcription is part of that deliverable →
+[microfrontend-architecture-reasoning/exercise-3-architecture.md](microfrontend-architecture-reasoning/exercise-3-architecture.md).
+
+### Exercise 4 — AI-assisted refactoring
+
+> _Requirement: "Explain which prompts were used."_
+
+The prompts and what each produced are documented with the code →
+[ai-assisted-refactoring/README.md](ai-assisted-refactoring/README.md).
+
+### Enhancements (beyond the brief)
+
+AI also helped polish past the requirements: a more attractive UI, **SEO**, **loading & empty
+states**, safer configuration, **more tests** for the hard-to-reproduce failures, and a documented
+**security** review — while flagging what would **exceed the scope** (Docker/CI, auth, an i18n
+library, E2E) so it was intentionally skipped.
+
 ## Documentation
 
 - **Backend:** [backend/README.md](backend/README.md) · security notes: [backend/SECURITY.md](backend/SECURITY.md)
-- **Frontend:** [frontend/README.md](frontend/README.md) (architecture, testing, AI usage)
+- **Frontend:** [frontend/README.md](frontend/README.md) (architecture, testing)
 - **Brand manual** (colors, type, components, voice): [BRAND.md](BRAND.md)
 - **Exercise 3** — architecture reasoning: [microfrontend-architecture-reasoning/](microfrontend-architecture-reasoning/exercise-3-architecture.md)
 - **Exercise 4** — AI-assisted refactor: [ai-assisted-refactoring/README.md](ai-assisted-refactoring/README.md)
