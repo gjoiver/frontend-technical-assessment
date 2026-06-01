@@ -1,6 +1,6 @@
 # Backend — Personal Creative Portfolio (Strapi 5)
 
-A **read-only** headless API that serves the portfolio content for the React SPA to consume. Built with Strapi 5 + TypeScript on SQLite. Runs locally; no deployment required.
+A **read-only** headless API that serves the portfolio content — and the products-page copy — for the React SPA to consume. Built with Strapi 5 + TypeScript on SQLite. Runs locally; no deployment required.
 
 ## Stack
 
@@ -41,7 +41,7 @@ cd backend
    npm run develop
    ```
 
-   The server runs at `http://localhost:1337` (admin at `/admin`, API at `/api/portfolio`).
+   The server runs at `http://localhost:1337` (admin at `/admin`, API at `/api/portfolio` and `/api/page`).
 
 4. **Create the admin user** on first run at `http://localhost:1337/admin`.
 
@@ -55,9 +55,10 @@ To re-test the clean-clone path, delete `.tmp/data.db` and restart — the seed 
 
 ## API
 
-| Method | Endpoint         | Description                                                                           |
+| Method | Endpoint         | Description                                                                            |
 | ------ | ---------------- | ------------------------------------------------------------------------------------- |
 | `GET`  | `/api/portfolio` | The portfolio with its components and the `projects` dynamic zone, already populated. |
+| `GET`  | `/api/page`      | The products-page copy (`title`, `intro`) consumed by the SPA's products view.        |
 
 - **Read-only:** the Public role only has `find`. Writes (`POST`/`PUT`/`DELETE`) return `403/405`.
 - **Response shape (v5):** `{ data: { id, documentId, ...fields }, meta }` — no `data.attributes` nesting (that was v4).
@@ -66,7 +67,9 @@ To re-test the clean-clone path, delete `.tmp/data.db` and restart — the seed 
 
 ## Content model
 
-A single **`portfolio`** single type (draft & publish) with:
+Two single types (both draft & publish).
+
+### `portfolio`
 
 - `aboutMe` — rich text (blocks)
 - `contactInformation` — component: `email`, `phone`, `socialMedia` (json)
@@ -74,6 +77,13 @@ A single **`portfolio`** single type (draft & publish) with:
 - `skills` — repeatable component: `name` (required), `level` (enum: Beginner/Intermediate/Advanced)
 - `experience` — repeatable component: `title` (required), `company` (required), `duration`, `responsibilities` (blocks)
 - `seo` — component: `metaTitle` (required), `metaDescription` (required), `keywords`
+
+### `page`
+
+Drives the SPA's products-view copy (Exercise 2):
+
+- `title` — string
+- `intro` — string
 
 ## Technical decisions
 
@@ -91,8 +101,10 @@ backend/
   config/        server, database, middlewares (CORS), etc.
   src/
     api/portfolio/         content-type, controller (populate), routes, services
+    api/page/              content-type (title, intro), controller, routes, services
     components/portfolio/  contact-info, project, skill, experience, seo
-    index.ts               bootstrap: public permissions
+    seed/                  portfolio.seed, page.seed, index (idempotent seeding)
+    index.ts               bootstrap: public permissions + content seed
   .env.example   variables template (committed; .env is ignored)
 ```
 
