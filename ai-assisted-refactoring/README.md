@@ -109,8 +109,8 @@ npm start -- 99999   # other ids: 404 (not found) → real reason in `cause`
 npm start -- -1      # validation error (never hits the network)
 ```
 
-The runner ([try.ts](try.ts)) imports `getUser`, calls it, and logs the user or the error
-(with its `cause`).
+The runner ([index.ts](index.ts)) imports `getUser`, calls it inside an `async main()`
+(`try/catch` + `await`), and logs the user or the error (with its `cause`).
 
 ## AI prompts used
 

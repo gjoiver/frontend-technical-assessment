@@ -5,7 +5,7 @@
   "type": "module",
   "description": "Exercise 4 — AI-assisted refactoring of getUser (runnable demo)",
   "scripts": {
-    "start": "tsx try.ts"
+    "start": "tsx index.ts"
   },
   "devDependencies": {
     "@types/node": "^22.10.0",
