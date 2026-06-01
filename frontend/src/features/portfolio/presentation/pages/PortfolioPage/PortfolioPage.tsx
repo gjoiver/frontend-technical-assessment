@@ -1,4 +1,4 @@
-import { Text } from "@shared/ui/atoms";
+import { Reveal, Text } from "@shared/ui/atoms";
 import { Seo } from "@shared/ui/Seo";
 import {
   Header,
@@ -53,11 +53,21 @@ export function PortfolioPage({ interactor }: PortfolioPageProps) {
             subtitle={data.seo.metaDescription}
           />
         ) : null}
-        <AboutSection aboutMe={data.aboutMe} />
-        <SkillGrid skills={data.skills} />
-        <ExperienceList experience={data.experience} />
-        <ProjectList projects={data.projects} />
-        <ContactCard contact={data.contact} />
+        <Reveal delay={0}>
+          <AboutSection aboutMe={data.aboutMe} />
+        </Reveal>
+        <Reveal delay={1}>
+          <SkillGrid skills={data.skills} />
+        </Reveal>
+        <Reveal delay={2}>
+          <ExperienceList experience={data.experience} />
+        </Reveal>
+        <Reveal delay={3}>
+          <ProjectList projects={data.projects} />
+        </Reveal>
+        <Reveal delay={4}>
+          <ContactCard contact={data.contact} />
+        </Reveal>
       </Container>
     </>
   );

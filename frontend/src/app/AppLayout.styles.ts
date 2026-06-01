@@ -7,9 +7,9 @@ export const Bar = styled.div`
 `;
 
 export const Nav = styled.nav`
-  max-width: 960px;
+  max-width: ${({ theme }) => theme.layout.maxWidth};
   margin: 0 auto;
-  padding: ${({ theme }) => `${theme.space.md} ${theme.space.lg}`};
+  padding: ${({ theme }) => `${theme.space.md} ${theme.layout.gutter}`};
   display: flex;
   gap: ${({ theme }) => theme.space.lg};
 `;
