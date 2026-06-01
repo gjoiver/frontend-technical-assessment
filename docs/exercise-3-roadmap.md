@@ -54,9 +54,9 @@ Fijar el problema y los criterios de éxito **antes** de cualquier tecnología.
 - ¿La org es **single-framework** o multi? (decide Module Federation vs Native Federation vs Web Components)
 - ¿Cuánto vale compartir dependencias (**un solo React**) frente a aislamiento total?
 
-- [ ] 2.1 Runtime vs build-time
-- [ ] 2.2 Mecanismo (Module Federation / Native Federation / Web Components)
-- [ ] **2.3 ADR-002: estrategia de integración**
+- [x] 2.1 Runtime vs build-time → **runtime**
+- [x] 2.2 Mecanismo → **Module Federation** (single-framework; Native Federation como ruta políglota)
+- [x] **2.3 ADR-002: estrategia de integración**
 
 ## Fase 3 — Composición y rendering (¿quién orquesta, dónde renderiza?)
 

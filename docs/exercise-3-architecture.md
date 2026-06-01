@@ -94,5 +94,37 @@ Horizontal slicing would avoid the duplication but kill autonomy; we choose auto
 
 ---
 
+## Phase 2 — Integration strategy (how do they come together?)
+
+**Runtime integration (not build-time).** The ADR-000 driver — independent deployability — is
+delivered *only* by runtime integration: each remote is built and deployed on its own and loaded
+by the host **at runtime** from a versioned manifest. Build-time integration (publishing each MFE
+as an npm package the shell bundles) **re-couples deploys** — shipping a remote forces a shell
+rebuild + redeploy — so it is rejected despite being simpler and type-safe.
+
+**Single-framework standard + Module Federation.** The organization **standardizes on one
+framework** (a governance decision) and integrates remotes with **Module Federation** at runtime.
+This shares **singletons** (one framework runtime, one router, one design system), keeping bundle
+size and runtime overhead low — directly serving the Core Web Vitals / efficiency NFRs — and
+keeping contracts simple.
+
+**Rejected here (kept as escape hatches):** *polyglot freedom* (multiple frameworks) via **Native
+Federation** (ESM/import maps) or **Web Components** — framework-agnostic, but duplicates runtimes
+(bundle bloat) and complicates shared state/routing and contracts. **Native Federation is the
+documented migration path** if polyglot becomes a real requirement later (same mental model,
+ESM-native, more future-proof).
+
+> **ADR-002 — Integration strategy**
+> - **Context:** remotes must deploy independently; the org can standardize its stack.
+> - **Decision:** **runtime integration via Module Federation** on a **single-framework standard**;
+>   remotes are loaded by the host from a versioned manifest. Build-time integration is rejected
+>   (re-couples deploys); polyglot mechanisms (Native Federation / Web Components) are escape
+>   hatches, with **Native Federation as the migration path** if polyglot is required.
+> - **Consequences:** independent deployability + shared singletons (low overhead, small bundles);
+>   accepts a framework-standardization constraint and Module Federation's runtime orchestration
+>   cost (mitigated in Phase 8).
+
+---
+
 > **Status:** built incrementally via [exercise-3-roadmap.md](exercise-3-roadmap.md). **Next:**
-> Phase 2 — integration strategy (runtime vs. build-time; federation mechanism) → ADR-002.
+> Phase 3 — composition & rendering (CSR shell vs. SSR/edge) → ADR-003.
