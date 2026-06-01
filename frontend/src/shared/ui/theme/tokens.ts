@@ -33,5 +33,15 @@ export const tokens = {
     size: { sm: "0.875rem", md: "1rem", lg: "1.25rem", xl: "2rem" },
     weight: { regular: 400, medium: 500, bold: 700 },
   },
+  motion: {
+    duration: { fast: "140ms", base: "240ms", slow: "520ms" },
+    ease: {
+      out: "cubic-bezier(0.22, 1, 0.36, 1)",
+      spring: "cubic-bezier(0.34, 1.56, 0.64, 1)",
+    },
+  },
+  level: { Beginner: "#38bdf8", Intermediate: "#a855f7", Advanced: "#34d399" },
+  zIndex: { hero: 0, header: 40, progress: 50, toast: 60 },
+  layout: { maxWidth: "60rem", gutter: "1.25rem" },
   breakpoints: { tablet: "768px", desktop: "1024px" },
 } as const;

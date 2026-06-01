@@ -1,7 +1,7 @@
-import { Text, Tag } from "@shared/ui/atoms";
+import { Text, TechIcon } from "@shared/ui/atoms";
 import { Card, Expandable, RichTextRenderer, SectionTitle } from "@shared/ui/molecules";
 import { portfolioI18n } from "@portfolio/presentation/i18n";
-import { Grid, Technologies } from "./ProjectList.styles";
+import { Grid, Technologies, TechChip } from "./ProjectList.styles";
 import type { ProjectListProps } from "./ProjectList.types";
 
 export function ProjectList({ projects }: ProjectListProps) {
@@ -25,7 +25,10 @@ export function ProjectList({ projects }: ProjectListProps) {
             {project.technologies.length > 0 && (
               <Technologies>
                 {project.technologies.map((tech) => (
-                  <Tag key={tech}>{tech}</Tag>
+                  <TechChip key={tech}>
+                    <TechIcon name={tech} size={16} />
+                    {tech}
+                  </TechChip>
                 ))}
               </Technologies>
             )}

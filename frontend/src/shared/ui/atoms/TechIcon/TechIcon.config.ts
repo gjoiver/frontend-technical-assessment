@@ -1,0 +1,41 @@
+import type { IconType } from "react-icons";
+import {
+  SiReact,
+  SiTypescript,
+  SiJavascript,
+  SiNodedotjs,
+  SiStyledcomponents,
+  SiAngular,
+  SiHtml5,
+  SiCss,
+  SiIonic,
+  SiFlutter,
+  SiDart,
+  SiGraphql,
+  SiFigma,
+  SiVite,
+  SiRedux,
+  SiTailwindcss,
+} from "react-icons/si";
+
+/** Keys are normalized: lower-case with dots/spaces/dashes removed. */
+export const TECH_ICONS: Record<string, IconType> = {
+  react: SiReact,
+  typescript: SiTypescript,
+  javascript: SiJavascript,
+  nodejs: SiNodedotjs,
+  styledcomponents: SiStyledcomponents,
+  angular: SiAngular,
+  html: SiHtml5,
+  html5: SiHtml5,
+  css: SiCss,
+  css3: SiCss,
+  ionic: SiIonic,
+  flutter: SiFlutter,
+  dart: SiDart,
+  graphql: SiGraphql,
+  figma: SiFigma,
+  vite: SiVite,
+  redux: SiRedux,
+  tailwindcss: SiTailwindcss,
+};

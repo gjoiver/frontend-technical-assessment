@@ -13,5 +13,13 @@ export const portfolioI18n = {
   actions: {
     showMore: "Ver más...",
     showLess: "Ver menos",
+    call: "Llamar",
+    copy: "Copiar",
+    copied: "¡Copiado!",
+  },
+  hero: {
+    eyebrow: "Disponible para proyectos",
+    ctaProjects: "Ver proyectos",
+    ctaContact: "Contacto",
   },
 } as const;

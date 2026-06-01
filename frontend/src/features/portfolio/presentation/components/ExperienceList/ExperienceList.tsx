@@ -1,7 +1,7 @@
 import { Text } from "@shared/ui/atoms";
-import { Card, Expandable, RichTextRenderer, SectionTitle } from "@shared/ui/molecules";
+import { Expandable, RichTextRenderer, SectionTitle } from "@shared/ui/molecules";
 import { portfolioI18n } from "@portfolio/presentation/i18n";
-import { List, Meta } from "./ExperienceList.styles";
+import { List, Item, Meta, Company } from "./ExperienceList.styles";
 import type { ExperienceListProps } from "./ExperienceList.types";
 
 export function ExperienceList({ experience }: ExperienceListProps) {
@@ -12,10 +12,10 @@ export function ExperienceList({ experience }: ExperienceListProps) {
       <SectionTitle>{portfolioI18n.sections.experience}</SectionTitle>
       <List>
         {experience.map((item) => (
-          <Card key={`${item.company}-${item.title}`}>
+          <Item key={`${item.company}-${item.title}`}>
             <Text variant="h3">{item.title}</Text>
             <Meta>
-              <Text variant="body">{item.company}</Text>
+              <Company>{item.company}</Company>
               {item.duration && (
                 <Text variant="caption" muted>
                   {item.duration}
@@ -30,7 +30,7 @@ export function ExperienceList({ experience }: ExperienceListProps) {
                 <RichTextRenderer value={item.responsibilities} />
               </Expandable>
             )}
-          </Card>
+          </Item>
         ))}
       </List>
     </section>

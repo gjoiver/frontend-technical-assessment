@@ -6,6 +6,7 @@ export const GlobalStyle = createGlobalStyle`
   html { scroll-behavior: smooth; }
   html, body { height: 100%; }
   body {
+    overflow-x: hidden;
     font-family: ${({ theme }) => theme.font.family};
     background-color: ${({ theme }) => theme.colors.background};
     background-image: radial-gradient(

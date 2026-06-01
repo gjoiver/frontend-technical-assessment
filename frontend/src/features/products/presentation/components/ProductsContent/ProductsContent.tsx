@@ -7,7 +7,7 @@ import { ProductGrid } from "../ProductGrid";
 import type { ProductsContentProps } from "./ProductsContent.types";
 
 export function ProductsContent({ data }: ProductsContentProps) {
-  const { pageItems, page, pageSize, totalPages, setPage, setPageSize } =
+  const { pageItems, page, pageSize, totalPages, total, setPage, setPageSize } =
     usePagination(data.products, 10);
 
   return (
@@ -24,6 +24,7 @@ export function ProductsContent({ data }: ProductsContentProps) {
             page={page}
             totalPages={totalPages}
             pageSize={pageSize}
+            total={total}
             onPageChange={setPage}
             onPageSizeChange={setPageSize}
             perPageLabel={productsI18n.pagination.perPage}
