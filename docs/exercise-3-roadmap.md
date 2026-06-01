@@ -80,11 +80,11 @@ Cada sub-decisión se resuelve socráticamente.
 - **Design system:** ¿paquete versionado o remote? ¿cómo evitas **N versiones divergentes**?
 - **Versionado:** ¿semver + contract tests bastan, o hace falta **chequeo en runtime**?
 
-- [ ] 4.1 Routing ownership
-- [ ] 4.2 Comunicación entre MFEs (mecanismo + contratos)
-- [ ] 4.3 Design system compartido + governance (versionado, deprecación)
-- [ ] 4.4 Contratos + versionado (build-time **y** runtime)
-- [ ] **4.5 ADR-004…007 (una por sub-decisión)**
+- [x] 4.1 Routing ownership → shell top-level + MFE sub-rutas, router singleton
+- [x] 4.2 Comunicación entre MFEs → URL + contexto del shell + **event bus tipado**, sin store global
+- [x] 4.3 Design system compartido + governance → librería versionada singleton, semver + deprecación N-1
+- [x] 4.4 Contratos + versionado → contracts package + semver + contract tests + **runtime version check**
+- [x] **4.5 ADR-004…007 registradas**
 
 ## Fase 5 — Seguridad y modelo de confianza
 

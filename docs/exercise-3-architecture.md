@@ -152,6 +152,69 @@ authenticated, where CSR is appropriate; this avoids paying SSR's operational co
 
 ---
 
+## Phase 4 — Shared concerns & contracts (cooperating without coupling)
+
+### 4.1 Routing
+
+The **shell owns top-level routes** (one per domain) + 404/guards; each **MFE owns its
+sub-routes**. **One** shared-history router singleton so deep links and the back button work
+across MFEs; the shell **lazy-mounts** the matching remote on route enter.
+
+### 4.2 Communication & shared state
+
+**No global cross-MFE store** (an anti-pattern that re-couples). Layered instead:
+
+- **URL** for navigational state.
+- **Shell context** for global concerns (auth, theme, locale), injected at mount.
+- **Typed pub/sub event bus** (event contracts in the shared package) for loose cross-MFE signals.
+- Each MFE owns its **domain state** internally.
+- **Ownership rule:** each datum has exactly **one** owning MFE/source; others **react** via
+  events/URL and never read another MFE's internals.
+
+### 4.3 Design-system governance
+
+A **versioned shared library** (single source of truth = design **tokens**), consumed as a
+**singleton** via Module Federation shared deps. Released independently with **semver** and an
+**N-1 deprecation** policy, owned by a platform/design-system team with a contribution model. This
+**contains** the cross-cutting duplication accepted in ADR-001.
+
+### 4.4 Contracts & versioning
+
+Remote interfaces (mount signature, exposed modules, event payloads) ship as a **typed contracts
+package**; remotes follow **semver**; **contract tests** in CI verify host↔remote compatibility;
+and a **runtime version check** — the host validates the remote's contract **before mounting** and
+shows a fallback if incompatible — defends against the version skew inherent to independent
+deploys.
+
+> **ADR-004 — Routing**
+> - **Context:** navigation must span independently-deployed MFEs.
+> - **Decision:** shell owns top-level routes + guards; each MFE owns its sub-routes; one
+>   shared-history router singleton; lazy-mount on route enter.
+> - **Consequences:** consistent deep links/history; the shell is the single routing authority.
+
+> **ADR-005 — Communication & shared state**
+> - **Context:** MFEs must share some state without re-coupling.
+> - **Decision:** no global store; **URL + shell context + a typed pub/sub event bus** (shared
+>   contracts); each MFE owns its domain state; one owner per datum, others react.
+> - **Consequences:** loose coupling and testability; cross-MFE data is eventually consistent.
+
+> **ADR-006 — Design-system governance**
+> - **Context:** avoid N divergent UIs while keeping team autonomy.
+> - **Decision:** a **versioned shared library** (tokens as source of truth), singleton via
+>   Module Federation, **semver + N-1 deprecation**, owned by a platform/DS team with a
+>   contribution model.
+> - **Consequences:** UI consistency and contained duplication; adds a governance/versioning
+>   burden.
+
+> **ADR-007 — Contracts & versioning**
+> - **Context:** independent deploys create version-skew risk between host and remotes.
+> - **Decision:** a **typed contracts package** + **semver** + **contract tests** in CI + a
+>   **runtime version check** (host validates before mounting; degrades with a fallback if
+>   incompatible).
+> - **Consequences:** breaking changes caught pre-prod and contained at runtime; adds a contract
+>   package to maintain.
+
+---
+
 > **Status:** built incrementally via [exercise-3-roadmap.md](exercise-3-roadmap.md). **Next:**
-> Phase 4 — shared concerns & contracts (routing, communication, design system, versioning) →
-> ADR-004…007.
+> Phase 5 — security & trust model → ADR-008.
