@@ -1,0 +1,14 @@
+{
+  "name": "exercise-4-refactoring",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Exercise 4 — AI-assisted refactoring of getUser (runnable demo)",
+  "scripts": {
+    "start": "tsx index.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "tsx": "^4.19.2"
+  }
+}
