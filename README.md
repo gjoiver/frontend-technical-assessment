@@ -1,59 +1,61 @@
-# Personal Creative Portfolio
+# Personal Creative Portfolio — Front-End Assessment
 
-Front-end assessment monorepo: a personal portfolio made of a headless backend (Strapi) and a SPA (React) that consumes it.
+A monorepo solving a front-end technical assessment: a **Strapi** headless backend and a
+**React 19** SPA that consumes it, plus two written exercises (architecture reasoning and an
+AI-assisted refactor).
 
-## Structure
+## What the assessment asked, and where it's solved
+
+| # | Requirement | Where it's delivered |
+|---|---|---|
+| **1** | **Portfolio** — read-only backend API + **responsive** SPA + **one unit test** | [`backend/`](backend) (Strapi, read-only) + [`frontend/`](frontend) (`portfolio` feature); Vitest tests |
+| **2** | **Products** — consume `fakestoreapi`, a fetch service, **detailed error handling (5xx / 4xx / network)**, a list page using Strapi for the page copy | [`frontend/`](frontend) `products` feature — typed `HttpError` + per-type messages, tested |
+| **3** | **Architecture reasoning** — scalable front-end with **microfrontends + DevOps** | [`microfrontend-architecture-reasoning/`](microfrontend-architecture-reasoning/exercise-3-architecture.md) |
+| **4** | **AI-assisted refactoring** — clean, production-ready code + prompts + final version | [`ai-assisted-refactoring/`](ai-assisted-refactoring/README.md) |
+| ✓ | **Document AI usage** | "AI Usage" sections in each README + prompt transcripts in the exercise docs |
+| ✓ | **Runs from a clean clone** | backend **seeds content automatically** on first boot; `.env.example` committed |
+
+> Quality criteria (responsive / mobile-first, clean-code, clean architecture) are detailed in
+> [frontend/README.md](frontend/README.md).
+
+## Run it
+
+**Two terminals.** Backend first, then frontend.
+
+```bash
+# 1) Backend  →  http://localhost:1337
+cd backend
+cp .env.example .env          # then generate secrets: openssl rand -base64 16
+npm install
+npm run develop               # seeds & publishes content automatically (no admin step)
+
+# 2) Frontend  →  http://localhost:5174
+cd frontend
+cp .env.example .env          # VITE_API_URL points at the backend (localhost:1337)
+npm install
+npm run dev
+```
+
+Open **http://localhost:5174** — `/` is the portfolio, `/products` is the products page. The dev
+server is pinned to **5174** (the backend's allowed CORS origin), so keep the backend running.
+
+> **Exercise 4** runs on its own: `cd ai-assisted-refactoring && npm install && npm start`.
+
+## Repository map
 
 ```
 .
-├── backend/    # Headless API with Strapi 5 (TypeScript, SQLite) — public read-only
-└── frontend/   # React 19 + Vite SPA consuming the API
+├── backend/                            # Strapi 5 · TypeScript · SQLite — public read-only API
+├── frontend/                           # React 19 · Vite · styled-components SPA
+├── microfrontend-architecture-reasoning/   # Exercise 3 — architecture decisions + diagrams
+└── ai-assisted-refactoring/            # Exercise 4 — refactored getUser + prompts
 ```
-
-Each folder is an independent app with its own `package.json`, installed and run separately.
-
-## Getting started
-
-### Backend
-
-```bash
-cd backend
-cp .env.example .env   # then generate values: openssl rand -base64 16
-npm install
-npm run develop        # http://localhost:1337  (admin at /admin, API at /api/portfolio)
-```
-
-On first boot the backend **seeds and publishes its content automatically** (idempotent), so a clean clone serves data with no admin step. See [backend/README.md](backend/README.md) for details, the content model and the API surface.
-
-### Frontend
-
-```bash
-cd frontend
-cp .env.example .env   # VITE_API_URL → the backend (default http://localhost:1337)
-npm install
-npm run dev            # http://localhost:5174
-```
-
-See [frontend/README.md](frontend/README.md) for the architecture, scripts and testing. The dev server is pinned to port **5174** (the backend's allowed CORS origin), so keep the backend running.
-
-## Frontend architecture & criteria
-
-The SPA is built to meet the assessment criteria: **fully responsive (mobile-first)**, **clean-code and best architecture practices**, and **component structure + styling + one unit test**.
-
-Applied practices:
-
-- **Clean Architecture** in layers per feature — `core` (domain: entities, repository ports, use cases/interactors), `data` (datasources, DTOs + mappers, repository implementations), `presentation` (React: pages, atomic components, hooks).
-- **Repository + Interactor** consumption pattern: `Page → hook → <Feature>Interactor (facade) → ‹Action›UseCase → Repository (port) → RepositoryImpl → DataSource → httpClient`.
-- **Feature-based** structure (`features/portfolio`, later `features/products`), with a root **`shared/`** kernel for cross-cutting dependencies (design system, HTTP client, config, theme).
-- **Atomic Design** for the UI: atoms → molecules → organisms → templates → pages.
-- **SOLID** principles, with dependency inversion wired at a composition root (`app/`).
-- **Rules of React** (https://react.dev/reference/rules): pure, idempotent components and hooks; immutable props/state; side effects only in effects/handlers.
-- **Testing:** Vitest — the unit test covers the `PortfolioMapper` (pure DTO→entity mapping) with the **AAA** pattern, **Gherkin** (Given/When/Then) scenario names, and fixtures in `data/mocks/`.
 
 ## Documentation
 
-- **Exercise 3 — microfrontend & DevOps architecture reasoning:** [microfrontend-architecture-reasoning/exercise-3-architecture.md](microfrontend-architecture-reasoning/exercise-3-architecture.md) (built decision-by-decision via [microfrontend-architecture-reasoning/exercise-3-roadmap.md](microfrontend-architecture-reasoning/exercise-3-roadmap.md))
-- **Exercise 4 — AI-assisted code refactoring:** [ai-assisted-refactoring/README.md](ai-assisted-refactoring/README.md) (final code: [getUser.ts](ai-assisted-refactoring/getUser.ts))
-- Guardrails and conventions (backend + frontend): [CLAUDE.md](CLAUDE.md)
-- Backend details: [backend/README.md](backend/README.md) · roadmap: [backend/ROADMAP.md](backend/ROADMAP.md)
-- Frontend details: [frontend/README.md](frontend/README.md) · roadmap: [frontend/ROADMAP.md](frontend/ROADMAP.md)
+- **Backend:** [backend/README.md](backend/README.md) · security notes: [backend/SECURITY.md](backend/SECURITY.md)
+- **Frontend:** [frontend/README.md](frontend/README.md) (architecture, testing, AI usage)
+- **Brand manual** (colors, type, components, voice): [BRAND.md](BRAND.md)
+- **Exercise 3** — architecture reasoning: [microfrontend-architecture-reasoning/](microfrontend-architecture-reasoning/exercise-3-architecture.md)
+- **Exercise 4** — AI-assisted refactor: [ai-assisted-refactoring/README.md](ai-assisted-refactoring/README.md)
+- Working conventions (backend + frontend): [CLAUDE.md](CLAUDE.md)
